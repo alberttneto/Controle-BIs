@@ -54,13 +54,14 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            will-change: transform, box-shadow, border-color;
         }
         
         .glass-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px 0 rgba(59, 130, 246, 0.3);
-            border-color: rgba(59, 130, 246, 0.3);
-            transition: all 0.3s ease;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px 0 rgba(59, 130, 246, 0.25);
+            border-color: rgba(59, 130, 246, 0.25);
         }
         
         .neon-border {
@@ -101,13 +102,14 @@
             padding: 0.5rem 1.5rem;
             border-radius: 0.5rem;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            will-change: transform, box-shadow;
         }
         
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
             background: linear-gradient(135deg, #2563eb, #1d4ed8);
         }
         
@@ -118,14 +120,15 @@
             padding: 0.5rem 1.5rem;
             border-radius: 0.5rem;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
             backdrop-filter: blur(10px);
+            will-change: transform, background, border-color;
         }
         
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
         
         @keyframes fadeIn {
@@ -271,8 +274,9 @@
         // Função para criar um item da lista
         function criarListItem(bi, index) {
             const item = document.createElement('div');
-            item.className = 'glass-card rounded-lg p-6 fade-in hover:shadow-xl transition-all duration-300';
-            item.style.animationDelay = `${index * 0.1}s`;
+            item.className = 'glass-card rounded-lg p-6 fade-in';
+            item.style.animationDelay = `${index * 0.05}s`;
+            item.style.willChange = 'transform, box-shadow';
             
             // Determinar classe do status
             let statusClass, statusIcon;
