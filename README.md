@@ -1,116 +1,72 @@
-# BI Dashboard Control
+# Dashboard BI Manager
 
-Uma SPA moderna para controle de dashboards Business Intelligence com design Dark Mode e efeito glassmorphism.
+Sistema web para centralizar e gerenciar dashboards BI da equipe. Permite criar, editar e excluir registros com interface em dark mode, atualização imediata na tela e persistência via Google Sheets.
 
-## 🚀 Funcionalidades
+---
 
-### ✅ Implementadas
-- **Design Dark Mode** moderno com fundo `#0f172a`
-- **Glassmorphism** cards com efeito blur e transparência
-- **Acentos em azul neon** (`#3b82f6`) com efeitos de glow
-- **Consumo de dados** via Google Sheets CSV
-- **Processamento CSV** com PapaParse
-- **Ordenação automática**: itens "Em desenvolvimento" primeiro
-- **Cards dinâmicos** com título, responsável e badge de status
-- **Modal de criação** para novos BIs
-- **Animações hover** e transições suaves
-- **Design responsivo** para mobile/tablet/desktop
-- **Estatísticas em tempo real** de dashboards
+## Funcionalidades
 
-### 📊 Estrutura dos Dados
-A planilha Google Sheets deve conter as colunas:
-- `titulo` - Nome do dashboard
-- `responsavel` - Nome do responsável
-- `link` - URL do dashboard
-- `status` - "Em desenvolvimento" ou "Concluído"
+- Cadastro, edição e exclusão de dashboards (CRUD completo)
+- Campo **Responsável** com lista suspensa carregada diretamente da planilha
+- **Filtros em tempo real**: por nome, status e responsável
+- **Contadores** por status: Desenvolvimento / Produção / Manutenção
+- Link direto para cada painel BI no card
+- **Atualização otimista** — a tela reflete as mudanças imediatamente, sem aguardar a sincronização com o Google Sheets
+- Design dark mode com glassmorphism
 
-## 🎨 Design System
+---
 
-### Cores
-- **Background**: `#0f172a` (Dark Mode)
-- **Primary**: `#3b82f6` (Neon Blue)
-- **Success**: `#10b981` (Green)
-- **Warning**: `#f59e0b` (Yellow)
+## Tecnologias
 
-### Efeitos
-- **Glassmorphism**: `backdrop-filter: blur(10px)`
-- **Neon Glow**: `box-shadow: 0 0 20px rgba(59, 130, 246, 0.5)`
-- **Hover Animation**: `translateY(-4px)` com shadow enhancement
+| Camada | Tecnologia |
+|--------|-----------|
+| Frontend | HTML + CSS + Vanilla JS (SPA) |
+| Estilo | Tailwind CSS + Lucide Icons (via CDN) |
+| Backend | Google Apps Script |
+| Banco de dados | Google Sheets |
 
-## 🛠️ Tecnologias
+Zero dependências npm. Setup em minutos.
 
-- **HTML5** com elementos semânticos
-- **Tailwind CSS** via CDN
-- **PapaParse** para processamento CSV
-- **JavaScript ES6+** vanilla
-- **Google Sheets API** (public CSV)
+---
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
-bi-dashboard/
-├── index.html          # SPA principal
-├── README.md          # Documentação
-└── docs/             # Assets futuros
+├── index.html       # Aplicação completa (frontend SPA)
+├── codigo.gs        # Backend (colar no Google Apps Script)
+├── INSTRUCOES.md    # Guia de configuração passo a passo
+└── ARQUITETURA.md   # Documentação técnica detalhada
 ```
 
-## 🚀 Deploy no GitHub Pages
+---
 
-1. Crie um repositório no GitHub
-2. Faça upload dos arquivos
-3. Vá em Settings > Pages
-4. Selecione branch `main` e pasta `/root`
-5. O site estará disponível em `https://username.github.io/repo-name`
+## Configuração Rápida
 
-## 🔧 Configuração
+**1. Planilha Google Sheets** — crie duas abas:
 
-### Planilha Google Sheets
-1. Crie uma planilha com as colunas: `titulo, responsavel, link, status`
-2. Vá em `File > Share > Publish to web`
-3. Selecione `Sheet1` e formato `CSV`
-4. Copie a URL e atualize a variável `urlPlanilha` no código
+- `Dashboards` com colunas: `ID | Nome do BI | Responsável | Status | Descrição | Link`
+- `Usuários` com coluna: `Nome` (um nome por linha a partir da linha 2)
 
-### Personalização
-- Altere cores no `<style>` section
-- Modifique o grid layout nas classes Tailwind
-- Ajuste animações nos keyframes CSS
+**2. Google Apps Script** — cole o `codigo.gs`, preencha o `SPREADSHEET_ID` e faça o deploy como Web App (acesso: qualquer pessoa).
 
-## 📱 Responsividade
+**3. index.html** — preencha o bloco `CONFIG`:
 
-- **Mobile**: 1 coluna (320px+)
-- **Tablet**: 2 colunas (768px+)
-- **Desktop**: 3 colunas (1024px+)
+```javascript
+const CONFIG = {
+    APPS_SCRIPT_URL: 'https://script.google.com/macros/s/[DEPLOYMENT_ID]/exec',
+    SHEETS_CSV_URL:  'https://docs.google.com/.../pub?output=csv',
+    SHEETS_USUARIOS_CSV_URL: 'https://docs.google.com/.../pub?output=csv&gid=[GID_DA_ABA_USUARIOS]'
+};
+```
 
-## ⚡ Performance
+**4. Hospedagem** — suba o `index.html` no GitHub Pages ou qualquer servidor estático.
 
-- **Lazy loading** dos cards
-- **Animações otimizadas** com CSS transforms
-- **CDN** para bibliotecas externas
-- **Minimal dependencies** (apenas Tailwind + PapaParse)
+Veja o [guia completo](INSTRUCOES.md) para instruções detalhadas.
 
-## 🔄 Fluxo de Dados
+---
 
-1. **Carregamento**: Fetch da planilha Google Sheets
-2. **Processamento**: PapaParse converte CSV → JSON
-3. **Ordenação**: "Em desenvolvimento" primeiro
-4. **Renderização**: Cards dinâmicos com fade-in
-5. **Atualização**: Estatísticas em tempo real
+## Limitações
 
-## 🎯 Limitações Atuais
-
-- **Persistência**: Novos BIs apenas em memória
-- **API**: Para salvar permanentemente, usar Google Sheets API
-- **Autenticação**: Planilha deve ser pública
-
-## 🚀 Próximos Passos
-
-- [ ] Integração com Google Sheets API
-- [ ] Sistema de autenticação
-- [ ] Edição/deleção de BIs
-- [ ] Filtros avançados
-- [ ] Exportação de relatórios
-- [ ] Dark/Light mode toggle
-
-## 📄 Licença
-
-MIT License - Free para uso comercial e pessoal
+- Sem autenticação — qualquer pessoa com a URL pode visualizar e modificar os dados
+- Adequado para equipes pequenas em ambiente interno
+- Google Sheets não é recomendado para volumes acima de ~10.000 registros
