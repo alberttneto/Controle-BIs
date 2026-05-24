@@ -576,6 +576,53 @@
             animation-delay: calc(0.05s * var(--index, 0));
         }
 
+        /* Version bump buttons */
+        .btn-version {
+            padding: 0.3rem 0;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-radius: 0.375rem;
+            border: 1px solid;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            width: 100%;
+            background: none;
+        }
+        .btn-version-manter {
+            color: #94a3b8;
+            border-color: rgba(100, 116, 139, 0.35);
+        }
+        .btn-version-manter:hover {
+            background: rgba(100, 116, 139, 0.15);
+        }
+        .btn-version-maior {
+            color: #fca5a5;
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+        .btn-version-maior:hover {
+            background: rgba(239, 68, 68, 0.15);
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+        }
+        .btn-version-menor {
+            color: #fcd34d;
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+        .btn-version-menor:hover {
+            background: rgba(245, 158, 11, 0.15);
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+        }
+        .btn-version-patch {
+            color: #86efac;
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+        .btn-version-patch:hover {
+            background: rgba(16, 185, 129, 0.15);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+        }
+
         /* Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
@@ -604,9 +651,6 @@
                 <button class="btn btn-primary" onclick="openCreateModal()">
                     <i data-lucide="plus" style="width: 18px; height: 18px;"></i>
                     Novo Dashboard
-                </button>
-                <button class="btn btn-primary" onclick="forceRefreshDashboards()" title="Atualizar dados" style="width: auto; padding: 0.75rem 1rem;">
-                    <i data-lucide="refresh-cw" style="width: 18px; height: 18px;"></i>
                 </button>
             </div>
         </div>
@@ -711,11 +755,6 @@
                     <textarea id="formDescricao" class="form-input" placeholder="Ex: Dashboard com KPIs de vendas..." style="resize: vertical; min-height: 80px;"></textarea>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Link do Painel</label>
-                    <input type="url" id="formLink" class="form-input" placeholder="Ex: https://seu-painel.com/dashboard">
-                </div>
-
                 <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                     <button type="submit" class="btn btn-primary" style="flex: 1;">
                         <span id="submitText">Salvar</span>
@@ -739,11 +778,9 @@
     <script>
         // Configuration
         const CONFIG = {
-            // APPS_SCRIPT_URL: 'https://script.google.com/macros/d/AKfycbygZSlKm0mR3Gts4hhyiVvMSpysYdyuXYPVWPVwl_UvQyFOTIrj6d9dRgB2UsOqHVZu/userweb',
+  
             APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbx2LR9TcOsfgzvU3Ao8n93yWl-Xq1PNIWp1PCJv57GIdRTPV1SEbuxYMrEL0THfRYpe/exec',
             SHEETS_CSV_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjvlzgCEKvoa8-ihDxVCGPEazUR7U90z3fz_yWEd1tk2Mvx2EUIc5W1Zz8h2DqV7tvbQvKVdkt2rnP/pub?output=csv',
-            // URL do CSV da aba "Usuários". Para obter: abra a planilha → clique na aba Usuários
-            // → veja o número após #gid= na URL → adicione &gid=NUMERO ao final abaixo.
             SHEETS_USUARIOS_CSV_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjvlzgCEKvoa8-ihDxVCGPEazUR7U90z3fz_yWEd1tk2Mvx2EUIc5W1Zz8h2DqV7tvbQvKVdkt2rnP/pub?output=csv&gid=24023174'
         };
 
@@ -894,10 +931,10 @@
             console.log('Número de colunas:', headers.length);
             
             // Verificar se cabeçalhos estão corretos
-            const expectedHeaders = ['ID', 'Nome do BI', 'Responsável', 'Status'];
-            const headerMatch = headers.every(h => expectedHeaders.includes(h));
-            if (!headerMatch) {
-                console.warn('⚠️ AVISO: Cabeçalhos não coincidem com esperado!');
+            const expectedHeaders = ['ID', 'Nome do BI', 'Versão', 'Responsável', 'Status', 'Última Atualização', 'Descrição'];
+            const missingHeaders = expectedHeaders.filter(h => !headers.includes(h));
+            if (missingHeaders.length > 0) {
+                console.warn('⚠️ AVISO: Cabeçalhos ausentes na planilha:', missingHeaders);
                 console.warn('Esperado:', expectedHeaders);
                 console.warn('Encontrado:', headers);
             }
@@ -1004,35 +1041,54 @@
 
             container.innerHTML = sorted.map((dash, index) => {
                 const statusClass = getStatusClass(dash['Status']);
+                const versaoAtual = dash['Versão'] || 'V0.0.0';
 
                 return `
                     <div class="card card-interactive" style="--index: ${index};">
+
+                        <!-- Cabeçalho: Nome + Status -->
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; gap: 1rem;">
-                            <div style="flex: 1; min-width: 0;">
-                                <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 0.5rem; word-break: break-word;">${dash['Nome do BI']}</h3>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0;">
-                                <span class="badge ${statusClass}">${dash['Status']}</span>
-                                ${dash['Link'] ? `
-                                <a href="${dash['Link']}" target="_blank" class="btn-link-corner" title="Acessar painel">
-                                    <i data-lucide="external-link" style="width: 18px; height: 18px;"></i>
-                                </a>
-                                ` : ''}
-                            </div>
+                            <h3 style="font-size: 1.125rem; font-weight: 700; word-break: break-word; flex: 1; min-width: 0;">${dash['Nome do BI']}</h3>
+                            <span class="badge ${statusClass}" style="flex-shrink: 0;">${dash['Status']}</span>
                         </div>
 
-                        <div style="margin-bottom: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                        <!-- Responsável -->
+                        <div style="margin-bottom: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
                             <p style="color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Responsável</p>
-                            <p style="color: var(--text-primary); font-weight: 600;">${dash['Responsável']}</p>
+                            <p style="color: var(--text-primary); font-weight: 600;">${dash['Responsável'] || '—'}</p>
                         </div>
 
+                        <!-- Versão + Bump buttons -->
+                        <div style="margin-bottom: 1rem; padding: 0.875rem; background: rgba(59, 130, 246, 0.05); border-radius: 0.75rem; border: 1px solid var(--border-color);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.625rem;">
+                                <p style="color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin: 0;">Versão</p>
+                                <span style="font-weight: 800; font-size: 0.9rem; color: var(--accent-cyan); font-family: monospace, monospace;">${versaoAtual}</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem;">
+                                <button class="btn-version btn-version-manter" onclick="bumpVersion('${dash['ID']}', 'manter')">Manter</button>
+                                <button class="btn-version btn-version-maior" onclick="bumpVersion('${dash['ID']}', 'maior')">Major</button>
+                                <button class="btn-version btn-version-menor" onclick="bumpVersion('${dash['ID']}', 'menor')">Minor</button>
+                                <button class="btn-version btn-version-patch" onclick="bumpVersion('${dash['ID']}', 'patch')">Patch</button>
+                            </div>
+                        </div>
+
+                        <!-- Última Atualização -->
+                        ${dash['Última Atualização'] ? `
+                        <div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="clock" style="width: 13px; height: 13px; color: var(--text-secondary); flex-shrink: 0;"></i>
+                            <p style="color: var(--text-secondary); font-size: 0.775rem; margin: 0;">Atualizado em <strong style="color: var(--text-primary);">${dash['Última Atualização']}</strong></p>
+                        </div>
+                        ` : ''}
+
+                        <!-- Descrição -->
                         ${dash['Descrição'] ? `
-                        <div style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(59, 130, 246, 0.05); border-radius: 0.75rem; border: 1px solid var(--border-color);">
+                        <div style="margin-bottom: 1rem; padding: 0.875rem; background: rgba(59, 130, 246, 0.03); border-radius: 0.75rem; border: 1px solid var(--border-color);">
                             <p style="color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Descrição</p>
                             <p style="color: var(--text-primary); font-size: 0.875rem; line-height: 1.5;">${dash['Descrição']}</p>
                         </div>
                         ` : ''}
 
+                        <!-- Ações -->
                         <div style="display: flex; gap: 0.5rem;">
                             <button class="btn btn-secondary btn-sm" style="flex: 1;" onclick="openEditModal('${dash['ID']}')">
                                 <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
@@ -1121,7 +1177,6 @@
             populateResponsavelSelect(dashboard['Responsável']);
             document.getElementById('formStatus').value = dashboard['Status'];
             document.getElementById('formDescricao').value = dashboard['Descrição'] || '';
-            document.getElementById('formLink').value = dashboard['Link'] || '';
             document.getElementById('modal').classList.add('active');
         }
 
@@ -1134,14 +1189,18 @@
         async function handleSubmit(event) {
             event.preventDefault();
 
-            const id = document.getElementById('formId').value;
-            const nome = document.getElementById('formName').value;
+            const id          = document.getElementById('formId').value;
+            const nome        = document.getElementById('formName').value;
             const responsavel = document.getElementById('formResponsavel').value;
-            const status = document.getElementById('formStatus').value;
-            const descricao = document.getElementById('formDescricao').value;
-            const link = document.getElementById('formLink').value;
+            const status      = document.getElementById('formStatus').value;
+            const descricao   = document.getElementById('formDescricao').value;
 
             const action = isEditing ? 'UPDATE' : 'CREATE';
+
+            // Versão e última atualização são preservadas ao editar (gerenciadas pelos botões do card)
+            const dashboardAtual  = isEditing ? allDashboards.find(d => d['ID'] === id) : null;
+            const versao          = dashboardAtual?.['Versão']            || 'V1.0.0';
+            const ultimaAtualizacao = dashboardAtual?.['Última Atualização'] || '';
 
             showLoading(isEditing ? 'Atualizando...' : 'Criando...');
 
@@ -1150,37 +1209,39 @@
                 formData.append('action', action);
                 if (isEditing) formData.append('id', id);
                 formData.append('nome', nome);
+                formData.append('versao', versao);
                 formData.append('responsavel', responsavel);
                 formData.append('status', status);
+                formData.append('ultimaAtualizacao', ultimaAtualizacao);
                 formData.append('descricao', descricao);
-                formData.append('link', link);
 
-                // Fire-and-forget: no-cors impede ler a resposta, mas a operação é executada
+                // Fire-and-forget
                 fetch(CONFIG.APPS_SCRIPT_URL, {
                     method: 'POST',
                     body: formData,
                     mode: 'no-cors'
                 });
 
-                // Atualiza o estado local imediatamente, sem esperar o CSV do Sheets sincronizar
+                // Atualização local imediata
                 if (isEditing) {
                     const idx = allDashboards.findIndex(d => d['ID'] === id);
                     if (idx !== -1) {
-                        allDashboards[idx]['Nome do BI'] = nome;
-                        allDashboards[idx]['Responsável'] = responsavel;
-                        allDashboards[idx]['Status'] = status;
-                        allDashboards[idx]['Descrição'] = descricao;
-                        allDashboards[idx]['Link'] = link;
+                        allDashboards[idx]['Nome do BI']         = nome;
+                        allDashboards[idx]['Responsável']        = responsavel;
+                        allDashboards[idx]['Status']             = status;
+                        allDashboards[idx]['Descrição']          = descricao;
+                        // Versão e Última Atualização permanecem inalteradas pelo modal
                     }
                 } else {
-                    // CREATE: adiciona com ID temporário; o sync em background corrigirá o ID real
+                    // CREATE: ID temporário até o sync em background corrigir com o ID real
                     allDashboards.push({
                         'ID': 'temp_' + Date.now(),
                         'Nome do BI': nome,
+                        'Versão': 'V1.0.0',
                         'Responsável': responsavel,
                         'Status': status,
-                        'Descrição': descricao,
-                        'Link': link
+                        'Última Atualização': '',
+                        'Descrição': descricao
                     });
                 }
 
@@ -1191,12 +1252,8 @@
                 hideLoading();
                 showToast(isEditing ? 'Dashboard atualizado com sucesso!' : 'Dashboard criado com sucesso!', 'success');
 
-                // Sync silencioso em background para garantir consistência com o Sheets
-                console.log('%c⏳ Sync em background agendado para 15s...', 'color: #f59e0b; font-weight: bold');
-                setTimeout(() => {
-                    console.log('%c🔄 Sync silencioso com Google Sheets...', 'color: #06b6d4; font-weight: bold');
-                    loadDashboards(true);
-                }, 15000);
+                // Sync silencioso em background
+                setTimeout(() => loadDashboards(true), 15000);
 
             } catch (error) {
                 console.error('Erro ao salvar:', error);
@@ -1271,6 +1328,81 @@
                 toast.remove();
             }, 4000);
         }
+
+        // ===== GERENCIAMENTO DE VERSÃO =====
+
+        /**
+         * Formata Date para DD/MM/AAAA HH:MM
+         */
+        function formatarDataHora(date) {
+            const pad = n => n.toString().padStart(2, '0');
+            return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+        }
+
+        /**
+         * Calcula a nova versão semântica a partir da versão atual e do tipo de bump.
+         * Major: (x+1).0.0 | Minor: x.(y+1).0 | Patch: x.y.(z+1)
+         */
+        function calcularNovaVersao(versaoAtual, tipo) {
+            const semV  = (versaoAtual || 'V0.0.0').replace(/^[Vv]/, '');
+            const partes = semV.split('.').map(n => parseInt(n) || 0);
+            while (partes.length < 3) partes.push(0);
+            const [x, y, z] = partes;
+            if (tipo === 'maior') return `V${x + 1}.0.0`;
+            if (tipo === 'menor') return `V${x}.${y + 1}.0`;
+            if (tipo === 'patch') return `V${x}.${y}.${z + 1}`;
+            return versaoAtual;
+        }
+
+        /**
+         * Realiza o bump de versão diretamente pelo card.
+         * 'manter' exibe um toast informativo sem alterar dados.
+         * 'maior' / 'menor' / 'patch' atualizam versão + Última Atualização imediatamente.
+         */
+        function bumpVersion(id, tipo) {
+            const dashboard = allDashboards.find(d => d['ID'] === id);
+            if (!dashboard) return;
+
+            if (tipo === 'manter') {
+                showToast(`Versão mantida em ${dashboard['Versão'] || 'V0.0.0'}`, 'success');
+                return;
+            }
+
+            const novaVersao = calcularNovaVersao(dashboard['Versão'], tipo);
+            const agora      = formatarDataHora(new Date());
+
+            // Fire-and-forget para o Apps Script
+            const formData = new FormData();
+            formData.append('action',             'UPDATE');
+            formData.append('id',                 id);
+            formData.append('nome',               dashboard['Nome do BI']);
+            formData.append('versao',             novaVersao);
+            formData.append('responsavel',        dashboard['Responsável']        || '');
+            formData.append('status',             dashboard['Status']);
+            formData.append('ultimaAtualizacao',  agora);
+            formData.append('descricao',          dashboard['Descrição']          || '');
+
+            fetch(CONFIG.APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors'
+            });
+
+            // Atualização local imediata
+            const idx = allDashboards.findIndex(d => d['ID'] === id);
+            if (idx !== -1) {
+                allDashboards[idx]['Versão']            = novaVersao;
+                allDashboards[idx]['Última Atualização'] = agora;
+            }
+            aplicarFiltros();
+
+            const tipoLabel = { maior: 'Major', menor: 'Minor', patch: 'Patch' }[tipo];
+            showToast(`${tipoLabel} → ${novaVersao}`, 'success');
+
+            // Sync silencioso em background
+            setTimeout(() => loadDashboards(true), 15000);
+        }
+        // ===== FIM GERENCIAMENTO DE VERSÃO =====
 
         // Close modal on Escape key
         document.addEventListener('keydown', (e) => {
