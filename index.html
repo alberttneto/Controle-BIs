@@ -576,52 +576,55 @@
             animation-delay: calc(0.05s * var(--index, 0));
         }
 
-        /* Version bump buttons */
-        .btn-version {
-            padding: 0.3rem 0;
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            border-radius: 0.375rem;
-            border: 1px solid;
+        /* Version option — radio estilizado no modal */
+        .version-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 0.25rem;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(100, 116, 139, 0.3);
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
-            width: 100%;
-            background: none;
+            user-select: none;
         }
-        .btn-version-manter {
-            color: #94a3b8;
-            border-color: rgba(100, 116, 139, 0.35);
+        .version-option-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #64748b;
+            pointer-events: none;
         }
-        .btn-version-manter:hover {
+        .version-option:hover {
+            border-color: rgba(59, 130, 246, 0.35);
+            background: rgba(59, 130, 246, 0.05);
+        }
+        /* Estados selecionados */
+        .version-option.sel-manter {
             background: rgba(100, 116, 139, 0.15);
+            border-color: rgba(100, 116, 139, 0.55);
         }
-        .btn-version-maior {
-            color: #fca5a5;
-            border-color: rgba(239, 68, 68, 0.4);
+        .version-option.sel-manter .version-option-label { color: #94a3b8; }
+        .version-option.sel-maior {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.55);
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.12);
         }
-        .btn-version-maior:hover {
-            background: rgba(239, 68, 68, 0.15);
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+        .version-option.sel-maior .version-option-label { color: #fca5a5; }
+        .version-option.sel-menor {
+            background: rgba(245, 158, 11, 0.12);
+            border-color: rgba(245, 158, 11, 0.55);
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.12);
         }
-        .btn-version-menor {
-            color: #fcd34d;
-            border-color: rgba(245, 158, 11, 0.4);
+        .version-option.sel-menor .version-option-label { color: #fcd34d; }
+        .version-option.sel-patch {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.55);
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.12);
         }
-        .btn-version-menor:hover {
-            background: rgba(245, 158, 11, 0.15);
-            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
-        }
-        .btn-version-patch {
-            color: #86efac;
-            border-color: rgba(16, 185, 129, 0.4);
-        }
-        .btn-version-patch:hover {
-            background: rgba(16, 185, 129, 0.15);
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
-        }
+        .version-option.sel-patch .version-option-label { color: #86efac; }
 
         /* Scrollbar */
         ::-webkit-scrollbar {
@@ -748,6 +751,34 @@
                         <option value="Produção">Produção</option>
                         <option value="Manutenção">Manutenção</option>
                     </select>
+                </div>
+
+                <!-- Seção de versão — visível apenas na edição -->
+                <div class="form-group" id="versaoSection" style="display: none;">
+                    <label class="form-label">Versão</label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.625rem 0.875rem; background: var(--bg-tertiary); border-radius: 0.625rem; margin-bottom: 0.75rem; border: 1px solid var(--border-color);">
+                        <span style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Atual</span>
+                        <span id="versaoAtualDisplay" style="font-family: monospace, monospace; font-weight: 800; color: var(--accent-cyan); font-size: 1rem;">V1.0.0</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;">
+                        <label class="version-option sel-manter" data-tipo="manter" onclick="selectVersionOption('manter')">
+                            <input type="radio" name="versionBump" value="manter" checked style="display:none;">
+                            <span class="version-option-label">Manter</span>
+                        </label>
+                        <label class="version-option" data-tipo="maior" onclick="selectVersionOption('maior')">
+                            <input type="radio" name="versionBump" value="maior" style="display:none;">
+                            <span class="version-option-label">Major</span>
+                        </label>
+                        <label class="version-option" data-tipo="menor" onclick="selectVersionOption('menor')">
+                            <input type="radio" name="versionBump" value="menor" style="display:none;">
+                            <span class="version-option-label">Minor</span>
+                        </label>
+                        <label class="version-option" data-tipo="patch" onclick="selectVersionOption('patch')">
+                            <input type="radio" name="versionBump" value="patch" style="display:none;">
+                            <span class="version-option-label">Patch</span>
+                        </label>
+                    </div>
+                    <p id="versaoPreview" style="text-align: right; font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem; min-height: 1.2em;"></p>
                 </div>
 
                 <div class="form-group">
@@ -1058,18 +1089,10 @@
                             <p style="color: var(--text-primary); font-weight: 600;">${dash['Responsável'] || '—'}</p>
                         </div>
 
-                        <!-- Versão + Bump buttons -->
-                        <div style="margin-bottom: 1rem; padding: 0.875rem; background: rgba(59, 130, 246, 0.05); border-radius: 0.75rem; border: 1px solid var(--border-color);">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.625rem;">
-                                <p style="color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin: 0;">Versão</p>
-                                <span style="font-weight: 800; font-size: 0.9rem; color: var(--accent-cyan); font-family: monospace, monospace;">${versaoAtual}</span>
-                            </div>
-                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem;">
-                                <button class="btn-version btn-version-manter" onclick="bumpVersion('${dash['ID']}', 'manter')">Manter</button>
-                                <button class="btn-version btn-version-maior" onclick="bumpVersion('${dash['ID']}', 'maior')">Major</button>
-                                <button class="btn-version btn-version-menor" onclick="bumpVersion('${dash['ID']}', 'menor')">Minor</button>
-                                <button class="btn-version btn-version-patch" onclick="bumpVersion('${dash['ID']}', 'patch')">Patch</button>
-                            </div>
+                        <!-- Versão (read-only no card; alterada pelo modal de edição) -->
+                        <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; padding: 0.625rem 0.875rem; background: rgba(59, 130, 246, 0.04); border-radius: 0.625rem; border: 1px solid var(--border-color);">
+                            <p style="color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin: 0;">Versão</p>
+                            <span style="font-weight: 800; font-size: 0.9rem; color: var(--accent-cyan); font-family: monospace, monospace;">${versaoAtual}</span>
                         </div>
 
                         <!-- Última Atualização -->
@@ -1161,6 +1184,7 @@
             document.getElementById('formId').value = '';
             document.getElementById('form').reset();
             populateResponsavelSelect();
+            document.getElementById('versaoSection').style.display = 'none';
             document.getElementById('modal').classList.add('active');
         }
 
@@ -1177,6 +1201,13 @@
             populateResponsavelSelect(dashboard['Responsável']);
             document.getElementById('formStatus').value = dashboard['Status'];
             document.getElementById('formDescricao').value = dashboard['Descrição'] || '';
+
+            // Seção de versão
+            const versaoAtual = dashboard['Versão'] || 'V1.0.0';
+            document.getElementById('versaoAtualDisplay').textContent = versaoAtual;
+            document.getElementById('versaoSection').style.display = 'block';
+            selectVersionOption('manter'); // sempre começa em Manter
+
             document.getElementById('modal').classList.add('active');
         }
 
@@ -1197,10 +1228,18 @@
 
             const action = isEditing ? 'UPDATE' : 'CREATE';
 
-            // Versão e última atualização são preservadas ao editar (gerenciadas pelos botões do card)
-            const dashboardAtual  = isEditing ? allDashboards.find(d => d['ID'] === id) : null;
-            const versao          = dashboardAtual?.['Versão']            || 'V1.0.0';
-            const ultimaAtualizacao = dashboardAtual?.['Última Atualização'] || '';
+            // Versão: lê o radio selecionado no modal (apenas na edição)
+            const dashboardAtual = isEditing ? allDashboards.find(d => d['ID'] === id) : null;
+            const tipoBump       = isEditing
+                ? (document.querySelector('input[name="versionBump"]:checked')?.value || 'manter')
+                : 'manter';
+            const versaoBase     = dashboardAtual?.['Versão'] || 'V1.0.0';
+            const versao         = (isEditing && tipoBump !== 'manter')
+                ? calcularNovaVersao(versaoBase, tipoBump)
+                : versaoBase;
+            const ultimaAtualizacao = (isEditing && tipoBump !== 'manter')
+                ? formatarDataHora(new Date())
+                : (dashboardAtual?.['Última Atualização'] || '');
 
             showLoading(isEditing ? 'Atualizando...' : 'Criando...');
 
@@ -1226,11 +1265,12 @@
                 if (isEditing) {
                     const idx = allDashboards.findIndex(d => d['ID'] === id);
                     if (idx !== -1) {
-                        allDashboards[idx]['Nome do BI']         = nome;
-                        allDashboards[idx]['Responsável']        = responsavel;
-                        allDashboards[idx]['Status']             = status;
-                        allDashboards[idx]['Descrição']          = descricao;
-                        // Versão e Última Atualização permanecem inalteradas pelo modal
+                        allDashboards[idx]['Nome do BI']          = nome;
+                        allDashboards[idx]['Responsável']         = responsavel;
+                        allDashboards[idx]['Status']              = status;
+                        allDashboards[idx]['Descrição']           = descricao;
+                        allDashboards[idx]['Versão']              = versao;
+                        allDashboards[idx]['Última Atualização']  = ultimaAtualizacao;
                     }
                 } else {
                     // CREATE: ID temporário até o sync em background corrigir com o ID real
@@ -1331,20 +1371,18 @@
 
         // ===== GERENCIAMENTO DE VERSÃO =====
 
-        /**
-         * Formata Date para DD/MM/AAAA HH:MM
-         */
+        /** Formata Date para DD/MM/AAAA HH:MM */
         function formatarDataHora(date) {
             const pad = n => n.toString().padStart(2, '0');
             return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
         }
 
         /**
-         * Calcula a nova versão semântica a partir da versão atual e do tipo de bump.
+         * Calcula a nova versão semântica.
          * Major: (x+1).0.0 | Minor: x.(y+1).0 | Patch: x.y.(z+1)
          */
         function calcularNovaVersao(versaoAtual, tipo) {
-            const semV  = (versaoAtual || 'V0.0.0').replace(/^[Vv]/, '');
+            const semV   = (versaoAtual || 'V0.0.0').replace(/^[Vv]/, '');
             const partes = semV.split('.').map(n => parseInt(n) || 0);
             while (partes.length < 3) partes.push(0);
             const [x, y, z] = partes;
@@ -1355,52 +1393,38 @@
         }
 
         /**
-         * Realiza o bump de versão diretamente pelo card.
-         * 'manter' exibe um toast informativo sem alterar dados.
-         * 'maior' / 'menor' / 'patch' atualizam versão + Última Atualização imediatamente.
+         * Seleciona uma opção de versão no modal (radio estilizado).
+         * Chamada pelo onclick de cada label.
          */
-        function bumpVersion(id, tipo) {
-            const dashboard = allDashboards.find(d => d['ID'] === id);
-            if (!dashboard) return;
-
-            if (tipo === 'manter') {
-                showToast(`Versão mantida em ${dashboard['Versão'] || 'V0.0.0'}`, 'success');
-                return;
-            }
-
-            const novaVersao = calcularNovaVersao(dashboard['Versão'], tipo);
-            const agora      = formatarDataHora(new Date());
-
-            // Fire-and-forget para o Apps Script
-            const formData = new FormData();
-            formData.append('action',             'UPDATE');
-            formData.append('id',                 id);
-            formData.append('nome',               dashboard['Nome do BI']);
-            formData.append('versao',             novaVersao);
-            formData.append('responsavel',        dashboard['Responsável']        || '');
-            formData.append('status',             dashboard['Status']);
-            formData.append('ultimaAtualizacao',  agora);
-            formData.append('descricao',          dashboard['Descrição']          || '');
-
-            fetch(CONFIG.APPS_SCRIPT_URL, {
-                method: 'POST',
-                body: formData,
-                mode: 'no-cors'
+        function selectVersionOption(tipo) {
+            // Limpa todas as seleções
+            document.querySelectorAll('.version-option').forEach(el => {
+                el.className = 'version-option';
             });
-
-            // Atualização local imediata
-            const idx = allDashboards.findIndex(d => d['ID'] === id);
-            if (idx !== -1) {
-                allDashboards[idx]['Versão']            = novaVersao;
-                allDashboards[idx]['Última Atualização'] = agora;
+            // Marca a opção escolhida
+            const label = document.querySelector(`.version-option[data-tipo="${tipo}"]`);
+            if (label) {
+                label.classList.add(`sel-${tipo}`);
+                label.querySelector('input').checked = true;
             }
-            aplicarFiltros();
+            updateVersionPreview(tipo);
+        }
 
-            const tipoLabel = { maior: 'Major', menor: 'Minor', patch: 'Patch' }[tipo];
-            showToast(`${tipoLabel} → ${novaVersao}`, 'success');
+        /** Atualiza o texto de preview abaixo das opções de versão */
+        function updateVersionPreview(tipo) {
+            const versaoAtual = document.getElementById('versaoAtualDisplay')?.textContent || 'V1.0.0';
+            const preview     = document.getElementById('versaoPreview');
+            if (!preview) return;
 
-            // Sync silencioso em background
-            setTimeout(() => loadDashboards(true), 15000);
+            if (!tipo || tipo === 'manter') {
+                preview.textContent = 'Versão não será alterada';
+                preview.style.color = 'var(--text-secondary)';
+            } else {
+                const nova      = calcularNovaVersao(versaoAtual, tipo);
+                const rotulo    = { maior: 'Major', menor: 'Minor', patch: 'Patch' }[tipo];
+                preview.textContent = `${rotulo}: ${versaoAtual} → ${nova}`;
+                preview.style.color = 'var(--accent-cyan)';
+            }
         }
         // ===== FIM GERENCIAMENTO DE VERSÃO =====
 
