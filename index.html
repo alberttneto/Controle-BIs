@@ -14,6 +14,10 @@
         <div class="header-content">
             <div class="logo">⚡ Dashboard BI</div>
             <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-help" onclick="openHelp()">
+                    <i data-lucide="help-circle" style="width: 18px; height: 18px;"></i>
+                    Ajuda
+                </button>
                 <button class="btn btn-primary" onclick="openCreateModal()">
                     <i data-lucide="plus" style="width: 18px; height: 18px;"></i>
                     Novo Dashboard
@@ -32,12 +36,12 @@
                 <div class="stat-label">Total de Dashboards</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="devCount">0</div>
-                <div class="stat-label">Em Desenvolvimento</div>
-            </div>
-            <div class="stat-card">
                 <div class="stat-number" id="prodCount">0</div>
                 <div class="stat-label">Em Produção</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="devCount">0</div>
+                <div class="stat-label">Em Desenvolvimento</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="maintCount">0</div>
@@ -176,6 +180,88 @@
         </div>
     </div>
 
+    <!-- Modal de Ajuda -->
+    <div class="modal" id="modalAjuda">
+        <div class="modal-content help-modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.75rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 0.75rem;">
+                    <i data-lucide="help-circle" style="width: 22px; height: 22px; color: var(--accent-cyan);"></i>
+                    Ajuda
+                </h2>
+                <button onclick="closeHelp()" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.5rem; line-height: 1;">×</button>
+            </div>
+
+            <div class="help-grid">
+
+                <!-- Bloco 1: Status -->
+                <div class="help-block">
+                    <h3 class="help-block-title">
+                        <i data-lucide="tag" style="width: 16px; height: 16px;"></i>
+                        Status dos BIs
+                    </h3>
+                    <ul class="help-list">
+                        <li>
+                            <span class="badge badge-development help-badge">Desenvolvimento</span>
+                            <p>BI em fase de construção. Ainda não está disponível para uso — a equipe está criando e estruturando os dados e visualizações.</p>
+                        </li>
+                        <li>
+                            <span class="badge badge-homologacao help-badge">Homologação</span>
+                            <p>BI finalizado e em fase de testes. Está sendo validado antes de ser liberado oficialmente para uso em produção.</p>
+                        </li>
+                        <li>
+                            <span class="badge badge-production help-badge">Produção</span>
+                            <p>BI ativo e disponível para uso pela equipe. Está estável e atualizado.</p>
+                        </li>
+                        <li>
+                            <span class="badge badge-maintenance help-badge">Manutenção</span>
+                            <p>BI temporariamente fora do ar. Pode estar em correção de dados, ajuste de filtros ou atualização de estrutura.</p>
+                        </li>
+                        <li>
+                            <span class="badge badge-discontinued help-badge">Descontinuado</span>
+                            <p>BI desativado e fora de uso. Mantido no sistema apenas para histórico.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Divisor vertical (desktop) / horizontal (mobile) -->
+                <div class="help-divider"></div>
+
+                <!-- Bloco 2: Versões -->
+                <div class="help-block">
+                    <h3 class="help-block-title">
+                        <i data-lucide="git-branch" style="width: 16px; height: 16px;"></i>
+                        Sistema de Versões
+                    </h3>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.25rem; line-height: 1.6;">
+                        As versões seguem o formato <strong style="color: var(--accent-cyan); font-family: monospace;">V<em>X</em>.<em>Y</em>.<em>Z</em></strong>, onde cada número representa um nível de mudança:
+                    </p>
+                    <ul class="help-list">
+                        <li>
+                            <span class="version-chip chip-manter">Manter</span>
+                            <p>Nenhuma alteração na versão. Use ao editar apenas a descrição, o responsável ou o status — sem mudanças no conteúdo do BI.</p>
+                        </li>
+                        <li>
+                            <span class="version-chip chip-maior">Major <span style="font-family:monospace; font-size:0.75rem;">X+1.0.0</span></span>
+                            <p>Reformulação completa do BI. Mudanças estruturais profundas — nova fonte de dados, redesign total ou quebra de compatibilidade com a versão anterior.</p>
+                        </li>
+                        <li>
+                            <span class="version-chip chip-menor">Minor <span style="font-family:monospace; font-size:0.75rem;">X.Y+1.0</span></span>
+                            <p>Nova funcionalidade ou visualização adicionada ao BI existente, sem quebrar o que já estava funcionando.</p>
+                        </li>
+                        <li>
+                            <span class="version-chip chip-patch">Patch <span style="font-family:monospace; font-size:0.75rem;">X.Y.Z+1</span></span>
+                            <p>Correção pontual: ajuste de filtro, correção de dado errado, pequena melhoria de texto ou layout.</p>
+                        </li>
+                    </ul>
+                    <p style="color: var(--text-secondary); font-size: 0.78rem; margin-top: 1rem; line-height: 1.5; border-top: 1px solid var(--border-color); padding-top: 0.875rem;">
+                        💡 A <strong style="color: var(--text-primary);">Última Atualização</strong> é registrada automaticamente sempre que você salvar com Major, Minor ou Patch selecionado.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-message">
@@ -185,5 +271,43 @@
     </div>
 
     <script src="script.js"></script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
 </body>
 </html>

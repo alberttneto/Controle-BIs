@@ -466,7 +466,11 @@ body {
 /* Stats */
 .stats-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
+    /* 1. Define o grid padrão para telas grandes: 3 colunas iguais */
+    grid-template-columns: repeat(3, 1fr);
+    /* 2. Opcional: Define a altura das 2 linhas (ex: automáticas ou fixas) */
+    grid-template-rows: repeat(2, auto);
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
@@ -498,7 +502,7 @@ body {
 }
 
 /* Selects globais */
-select {
+* select {
     width: 100%;
     padding: 0.75rem;
     background-color: #1e293b;
@@ -514,18 +518,18 @@ select {
     -moz-appearance: none;
 }
 
-select:focus {
+* select:focus {
     border-color: #3b82f6;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
-select option {
+* select option {
     background-color: #1e293b;
     color: var(--text-primary);
     padding: 10px;
 }
 
-label {
+* label {
     display: block;
     color: var(--text-secondary);
     font-size: 0.75rem;
@@ -596,11 +600,132 @@ label {
 ::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
 
+/* Botão de Ajuda */
+.btn-help {
+    background: rgba(100, 116, 139, 0.15);
+    color: var(--text-secondary);
+    border: 1px solid rgba(100, 116, 139, 0.35);
+}
+
+.btn-help:hover {
+    background: rgba(100, 116, 139, 0.28);
+    color: var(--text-primary);
+    border-color: rgba(100, 116, 139, 0.6);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Modal de Ajuda — container mais largo */
+.help-modal-content {
+    max-width: 860px;
+    width: 95%;
+    max-height: 88vh;
+}
+
+/* Grid dois painéis lado a lado */
+.help-grid {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    gap: 0 1.75rem;
+    align-items: start;
+}
+
+/* Divisor vertical */
+.help-divider {
+    background: var(--border-color);
+    align-self: stretch;
+    min-height: 100%;
+}
+
+.help-block-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Lista de itens de ajuda */
+.help-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.help-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.help-list li p {
+    color: var(--text-secondary);
+    font-size: 0.835rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.help-badge {
+    align-self: flex-start;
+    margin-bottom: 0.1rem;
+}
+
+/* Chips de versão na ajuda */
+.version-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    align-self: flex-start;
+    margin-bottom: 0.1rem;
+}
+
+.chip-manter {
+    background: rgba(100, 116, 139, 0.15);
+    color: #94a3b8;
+    border: 1px solid rgba(100, 116, 139, 0.4);
+}
+
+.chip-maior {
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.45);
+}
+
+.chip-menor {
+    background: rgba(245, 158, 11, 0.12);
+    color: #fcd34d;
+    border: 1px solid rgba(245, 158, 11, 0.45);
+}
+
+.chip-patch {
+    background: rgba(16, 185, 129, 0.12);
+    color: #86efac;
+    border: 1px solid rgba(16, 185, 129, 0.45);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .header-content {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .cards-grid {
@@ -617,5 +742,21 @@ label {
         bottom: 1rem;
         right: 1rem;
         left: 1rem;
+    }
+
+    /* Ajuda: empilha os painéis em mobile */
+    .help-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem 0;
+    }
+
+    .help-divider {
+        height: 1px;
+        min-height: unset;
+        align-self: auto;
+    }
+
+    .help-modal-content {
+        padding: 1.25rem;
     }
 }

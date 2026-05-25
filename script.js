@@ -301,10 +301,10 @@ function renderDashboardsFiltrados() {
                         <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
                         Editar
                     </button>
-                    <button class="btn btn-danger btn-sm" style="flex: 1;" onclick="deleteDashboard('${dash['ID']}')">
+                    <!--button class="btn btn-danger btn-sm" style="flex: 1;" onclick="deleteDashboard('${dash['ID']}')">
                         <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
                         Deletar
-                    </button>
+                    </button-->
                 </div>
             </div>
         `;
@@ -402,8 +402,20 @@ function closeModal() {
     document.getElementById('modal').classList.remove('active');
 }
 
+function openHelp() {
+    document.getElementById('modalAjuda').classList.add('active');
+    initLucide();
+}
+
+function closeHelp() {
+    document.getElementById('modalAjuda').classList.remove('active');
+}
+
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') {
+        closeModal();
+        closeHelp();
+    }
 });
 
 // ===== CRUD =====
@@ -488,41 +500,41 @@ async function handleSubmit(event) {
     }
 }
 
-async function deleteDashboard(id) {
-    if (!confirm('Tem certeza que deseja deletar este dashboard?')) return;
+// async function deleteDashboard(id) {
+//     if (!confirm('Tem certeza que deseja deletar este dashboard?')) return;
 
-    showLoading('Deletando...');
+//     showLoading('Deletando...');
 
-    try {
-        const formData = new FormData();
-        formData.append('action', 'DELETE');
-        formData.append('id', id);
+//     try {
+//         const formData = new FormData();
+//         formData.append('action', 'DELETE');
+//         formData.append('id', id);
 
-        fetch(CONFIG.APPS_SCRIPT_URL, {
-            method: 'POST',
-            body: formData,
-            mode: 'no-cors'
-        });
+//         fetch(CONFIG.APPS_SCRIPT_URL, {
+//             method: 'POST',
+//             body: formData,
+//             mode: 'no-cors'
+//         });
 
-        allDashboards = allDashboards.filter(d => d['ID'] !== id);
-        atualizarResponsaveisUnicos();
-        aplicarFiltros();
-        updateStats();
-        hideLoading();
-        showToast('Dashboard deletado com sucesso!', 'success');
+//         allDashboards = allDashboards.filter(d => d['ID'] !== id);
+//         atualizarResponsaveisUnicos();
+//         aplicarFiltros();
+//         updateStats();
+//         hideLoading();
+//         showToast('Dashboard deletado com sucesso!', 'success');
 
-        console.log('%c⏳ Sync em background agendado para 15s...', 'color: #f59e0b; font-weight: bold');
-        setTimeout(() => {
-            console.log('%c🔄 Sync silencioso com Google Sheets após DELETE...', 'color: #06b6d4; font-weight: bold');
-            loadDashboards(true);
-        }, 15000);
+//         console.log('%c⏳ Sync em background agendado para 15s...', 'color: #f59e0b; font-weight: bold');
+//         setTimeout(() => {
+//             console.log('%c🔄 Sync silencioso com Google Sheets após DELETE...', 'color: #06b6d4; font-weight: bold');
+//             loadDashboards(true);
+//         }, 15000);
 
-    } catch (error) {
-        console.error('Erro ao deletar:', error);
-        showToast('Erro ao deletar dashboard', 'error');
-        hideLoading();
-    }
-}
+//     } catch (error) {
+//         console.error('Erro ao deletar:', error);
+//         showToast('Erro ao deletar dashboard', 'error');
+//         hideLoading();
+//     }
+// }
 
 // ===== LOADING & TOAST =====
 
