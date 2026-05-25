@@ -502,7 +502,7 @@ body {
 }
 
 /* Selects globais */
-* select {
+/* * select {
     width: 100%;
     padding: 0.75rem;
     background-color: #1e293b;
@@ -521,7 +521,7 @@ body {
 * select:focus {
     border-color: #3b82f6;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
+} */
 
 * select option {
     background-color: #1e293b;
