@@ -72,9 +72,9 @@
         }
 
         .badge-development {
-            background: rgba(139, 92, 246, 0.2);
-            color: #c4b5fd;
-            border: 1px solid rgba(139, 92, 246, 0.5);
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.5);
         }
 
         .badge-production {
@@ -84,9 +84,21 @@
         }
 
         .badge-maintenance {
-            background: rgba(245, 158, 11, 0.2);
-            color: #fcd34d;
-            border: 1px solid rgba(245, 158, 11, 0.5);
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.5);
+        }
+
+        .badge-homologacao {
+            background: rgba(234, 179, 8, 0.2);
+            color: #fde047;
+            border: 1px solid rgba(234, 179, 8, 0.5);
+        }
+
+        .badge-discontinued {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+            border: 1px solid rgba(148, 163, 184, 0.5);
         }
 
         /* Cards */
@@ -679,6 +691,14 @@
                 <div class="stat-number" id="maintCount">0</div>
                 <div class="stat-label">Manutenção</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-number" id="homoCount">0</div>
+                <div class="stat-label">Homologação</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="discCount">0</div>
+                <div class="stat-label">Descontinuado</div>
+            </div>
         </div>
 
         <!-- Filtros -->
@@ -697,6 +717,8 @@
                     <option value="Desenvolvimento">Desenvolvimento</option>
                     <option value="Produção">Produção</option>
                     <option value="Manutenção">Manutenção</option>
+                    <option value="Homologação">Homologação</option>
+                    <option value="Descontinuado">Descontinuado</option>
                 </select>
             </div>
 
@@ -750,6 +772,8 @@
                         <option value="Desenvolvimento">Desenvolvimento</option>
                         <option value="Produção">Produção</option>
                         <option value="Manutenção">Manutenção</option>
+                        <option value="Homologação">Homologação</option>
+                        <option value="Descontinuado">Descontinuado</option>
                     </select>
                 </div>
 
@@ -1159,21 +1183,28 @@
         // Get status badge class
         function getStatusClass(status) {
             if (status === 'Desenvolvimento') return 'badge-development';
-            if (status === 'Produção') return 'badge-production';
-            return 'badge-maintenance';
+            if (status === 'Produção')        return 'badge-production';
+            if (status === 'Manutenção')      return 'badge-maintenance';
+            if (status === 'Homologação')     return 'badge-homologacao';
+            if (status === 'Descontinuado')   return 'badge-discontinued';
+            return 'badge-discontinued';
         }
 
         // Update stats
         function updateStats() {
             const total = allDashboards.length;
-            const dev = allDashboards.filter(d => d['Status'] === 'Desenvolvimento').length;
-            const prod = allDashboards.filter(d => d['Status'] === 'Produção').length;
+            const dev   = allDashboards.filter(d => d['Status'] === 'Desenvolvimento').length;
+            const prod  = allDashboards.filter(d => d['Status'] === 'Produção').length;
             const maint = allDashboards.filter(d => d['Status'] === 'Manutenção').length;
+            const homo  = allDashboards.filter(d => d['Status'] === 'Homologação').length;
+            const disc  = allDashboards.filter(d => d['Status'] === 'Descontinuado').length;
 
             document.getElementById('totalCount').textContent = total;
-            document.getElementById('devCount').textContent = dev;
-            document.getElementById('prodCount').textContent = prod;
+            document.getElementById('devCount').textContent   = dev;
+            document.getElementById('prodCount').textContent  = prod;
             document.getElementById('maintCount').textContent = maint;
+            document.getElementById('homoCount').textContent  = homo;
+            document.getElementById('discCount').textContent  = disc;
         }
 
         // Open create modal
