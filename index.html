@@ -810,7 +810,7 @@
         // Configuration
         const CONFIG = {
   
-            APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbx2LR9TcOsfgzvU3Ao8n93yWl-Xq1PNIWp1PCJv57GIdRTPV1SEbuxYMrEL0THfRYpe/exec',
+            APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxw_B_D1-RzH24c66v0WBDZx8YbiLA55zhdTilv9votGsV97r2iP7RVT0HuDUGwcYZ4/exec',
             SHEETS_CSV_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjvlzgCEKvoa8-ihDxVCGPEazUR7U90z3fz_yWEd1tk2Mvx2EUIc5W1Zz8h2DqV7tvbQvKVdkt2rnP/pub?output=csv',
             SHEETS_USUARIOS_CSV_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjvlzgCEKvoa8-ihDxVCGPEazUR7U90z3fz_yWEd1tk2Mvx2EUIc5W1Zz8h2DqV7tvbQvKVdkt2rnP/pub?output=csv&gid=24023174'
         };
@@ -1293,7 +1293,7 @@
                 showToast(isEditing ? 'Dashboard atualizado com sucesso!' : 'Dashboard criado com sucesso!', 'success');
 
                 // Sync silencioso em background
-                setTimeout(() => loadDashboards(true), 15000);
+                // setTimeout(() => loadDashboards(true), 15000);
 
             } catch (error) {
                 console.error('Erro ao salvar:', error);
