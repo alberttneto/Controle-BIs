@@ -445,7 +445,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.375rem;
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
     animation: fadeIn 0.5s ease-out;
 }
@@ -483,13 +483,15 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 0.75rem 1.25rem;
+    /* padding: 0.75rem 1.25rem; */
+    padding: 0.5rem 1.25rem;
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: 0.625rem;
     transition: all 0.2s ease;
     position: relative;
     animation: fadeIn 0.4s ease-out;
+    text-align: center;
 }
 
 .bi-row:hover {
@@ -500,12 +502,12 @@ body {
 }
 
 /* Colunas da linha */
-.row-status   { flex-shrink: 0; width: 130px; }
+.row-status   { flex-shrink: 0; width: 150px; text-align: center; font-size: 0.9rem;}
 .row-nome     { flex: 1; min-width: 0; font-weight: 700; font-size: 0.9rem;
-                white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+                white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left;}
 .row-responsavel { flex-shrink: 0; width: 170px; font-size: 0.8rem;
                    color: var(--text-secondary); white-space: nowrap;
-                   overflow: hidden; text-overflow: ellipsis; }
+                   overflow: hidden; text-overflow: ellipsis; text-align: left; }
 .row-versao   { flex-shrink: 0; width: 68px; font-family: monospace, monospace;
                 font-size: 0.82rem; font-weight: 800; color: var(--accent-cyan);
                 text-align: center; }
@@ -570,7 +572,7 @@ body {
 }
 
 /* Ações na linha */
-.row-actions  { flex-shrink: 0; display: flex; gap: 0.4rem; }
+.row-actions  { flex-shrink: 0; display: flex; gap: 0.4rem; width: 70px;}
 
 /* Stats */
 .stats-container {
@@ -841,13 +843,16 @@ body {
         width: 100%;
     }
 
-    .bi-row-header { display: none; }
+    .bi-row-header  { display: none; }
 
-    .row-responsavel,
-    .row-data         { display: none; }
+    /* Mobile: oculta versão, data e ícone de descrição */
+    .row-versao,
+    .row-data,
+    .row-desc-wrap  { display: none; }
 
-    .row-status       { width: auto; }
-    .row-versao       { width: auto; }
+    /* Ajusta larguras para caber em tela pequena */
+    .row-status      { width: auto; flex-shrink: 0; }
+    .row-responsavel { width: auto; max-width: 130px; display: block; }
 
     .modal-content {
         max-width: 100%;

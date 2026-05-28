@@ -134,20 +134,44 @@ async function loadDashboards(silent = false) {
     }
 }
 
+/**
+ * Faz o parse de uma linha CSV respeitando campos entre aspas duplas.
+ * Ex: 1,"Dashboard, KPIs",V1.0.0 → ['1', 'Dashboard, KPIs', 'V1.0.0']
+ */
+function parseCSVLine(line) {
+    const result = [];
+    let current  = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+            // aspas duplas dentro de campo entre aspas → literal "
+            if (inQuotes && line[i + 1] === '"') { current += '"'; i++; }
+            else { inQuotes = !inQuotes; }
+        } else if (ch === ',' && !inQuotes) {
+            result.push(current.trim());
+            current = '';
+        } else {
+            current += ch;
+        }
+    }
+    result.push(current.trim());
+    return result;
+}
+
 function parseCSV(csv) {
     console.log('%c=== PARSEANDO CSV ===', 'color: orange; font-weight: bold');
     const lines = csv.trim().split('\n');
     console.log('Total de linhas no arquivo:', lines.length);
-    console.log('Tamanho do CSV:', csv.length, 'caracteres');
 
     if (lines.length < 2) {
         console.warn('⚠️ CSV não tem pelo menos 2 linhas (cabeçalho + 1 dado)');
         return [];
     }
 
-    const headers = lines[0].split(',').map(h => h.trim());
+    const headers = parseCSVLine(lines[0]);
     console.log('Cabeçalhos encontrados:', headers);
-    console.log('Número de colunas:', headers.length);
 
     const expectedHeaders = ['ID', 'Nome do BI', 'Versão', 'Responsável', 'Status', 'Última Atualização', 'Descrição'];
     const missingHeaders = expectedHeaders.filter(h => !headers.includes(h));
@@ -159,14 +183,14 @@ function parseCSV(csv) {
 
     const data = [];
     for (let i = 1; i < lines.length; i++) {
-        const obj = {};
-        const values = lines[i].split(',').map(v => v.trim());
+        const values = parseCSVLine(lines[i]);
 
         if (values.length === 0 || (values.length === 1 && values[0] === '')) {
             console.log(`Linha ${i + 1}: ignorada (vazia)`);
             continue;
         }
 
+        const obj = {};
         headers.forEach((header, index) => {
             obj[header] = values[index] || '';
         });
@@ -181,7 +205,6 @@ function parseCSV(csv) {
 
     console.log('%c=== PARSE CONCLUÍDO ===', 'color: orange; font-weight: bold');
     console.log('Total de dashboards válidos:', data.length);
-    console.log('Dados parseados:', data);
     return data;
 }
 
