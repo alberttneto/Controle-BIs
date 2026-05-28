@@ -232,7 +232,7 @@ function renderDashboardsFiltrados() {
 
     if (dashboardsFiltrados.length === 0) {
         container.innerHTML = `
-            <div class="empty-state" style="grid-column: 1 / -1; margin-top: 2rem;">
+            <div class="empty-state" style="margin-top: 2rem;">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -254,62 +254,56 @@ function renderDashboardsFiltrados() {
         (statusOrder[a['Status']] ?? 3) - (statusOrder[b['Status']] ?? 3)
     );
 
-    container.innerHTML = sorted.map((dash, index) => {
+    // Cabeçalho das colunas
+    const header = `
+        <div class="bi-row-header">
+            <span class="row-status">Status</span>
+            <span class="row-nome">Nome do BI</span>
+            <span class="row-responsavel">Responsável</span>
+            <span class="row-versao">Versão</span>
+            <span class="row-data">Atualização</span>
+            <span style="width:28px;"></span>
+            <span style="width:70px;"></span>
+        </div>`;
+
+    const rows = sorted.map((dash, index) => {
         const statusClass = getStatusClass(dash['Status']);
         const versaoAtual = dash['Versão'] || 'V0.0.0';
+        const descricao   = dash['Descrição'] || '';
+
+        const descIcon = descricao
+            ? `<div class="row-desc-wrap">
+                   <span class="row-desc-icon">
+                       <i data-lucide="info" style="width:15px;height:15px;"></i>
+                   </span>
+                   <div class="row-tooltip">${descricao}</div>
+               </div>`
+            : `<div style="width:28px;"></div>`;
+
+        const ultimaAtualizacao = dash['Última Atualização']
+            ? `<i data-lucide="clock" style="width:12px;height:12px;flex-shrink:0;"></i>${dash['Última Atualização']}`
+            : '—';
 
         return `
-            <div class="card card-interactive" style="--index: ${index};">
-
-                <!-- Cabeçalho: Nome + Status -->
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; gap: 1rem;">
-                    <h3 style="font-size: 1.125rem; font-weight: 700; word-break: break-word; flex: 1; min-width: 0;">${dash['Nome do BI']}</h3>
-                    <span class="badge ${statusClass}" style="flex-shrink: 0;">${dash['Status']}</span>
-                </div>
-
-                <!-- Responsável -->
-                <div style="margin-bottom: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
-                    <p style="color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Responsável</p>
-                    <p style="color: var(--text-primary); font-weight: 600;">${dash['Responsável'] || '—'}</p>
-                </div>
-
-                <!-- Versão -->
-                <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; padding: 0.625rem 0.875rem; background: rgba(59, 130, 246, 0.04); border-radius: 0.625rem; border: 1px solid var(--border-color);">
-                    <p style="color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin: 0;">Versão</p>
-                    <span style="font-weight: 800; font-size: 0.9rem; color: var(--accent-cyan); font-family: monospace, monospace;">${versaoAtual}</span>
-                </div>
-
-                <!-- Última Atualização -->
-                ${dash['Última Atualização'] ? `
-                <div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                    <i data-lucide="clock" style="width: 13px; height: 13px; color: var(--text-secondary); flex-shrink: 0;"></i>
-                    <p style="color: var(--text-secondary); font-size: 0.775rem; margin: 0;">Atualizado em <strong style="color: var(--text-primary);">${dash['Última Atualização']}</strong></p>
-                </div>
-                ` : ''}
-
-                <!-- Descrição -->
-                ${dash['Descrição'] ? `
-                <div style="margin-bottom: 1rem; padding: 0.875rem; background: rgba(59, 130, 246, 0.03); border-radius: 0.75rem; border: 1px solid var(--border-color);">
-                    <p style="color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Descrição</p>
-                    <p style="color: var(--text-primary); font-size: 0.875rem; line-height: 1.5;">${dash['Descrição']}</p>
-                </div>
-                ` : ''}
-
-                <!-- Ações -->
-                <div style="display: flex; gap: 0.5rem;">
-                    <button class="btn btn-secondary btn-sm" style="flex: 1;" onclick="openEditModal('${dash['ID']}')">
-                        <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
+            <div class="bi-row" style="--index:${index};">
+                <span class="row-status">
+                    <span class="badge ${statusClass}">${dash['Status']}</span>
+                </span>
+                <span class="row-nome" title="${dash['Nome do BI']}">${dash['Nome do BI']}</span>
+                <span class="row-responsavel" title="${dash['Responsável'] || ''}">${dash['Responsável'] || '—'}</span>
+                <span class="row-versao">${versaoAtual}</span>
+                <span class="row-data">${ultimaAtualizacao}</span>
+                ${descIcon}
+                <div class="row-actions">
+                    <button class="btn btn-secondary btn-sm" onclick="openEditModal('${dash['ID']}')">
+                        <i data-lucide="edit-2" style="width:13px;height:13px;"></i>
                         Editar
                     </button>
-                    <!--button class="btn btn-danger btn-sm" style="flex: 1;" onclick="deleteDashboard('${dash['ID']}')">
-                        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
-                        Deletar
-                    </button-->
                 </div>
-            </div>
-        `;
+            </div>`;
     }).join('');
 
+    container.innerHTML = header + rows;
     initLucide();
 }
 
