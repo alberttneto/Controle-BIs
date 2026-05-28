@@ -87,6 +87,12 @@ body {
     border: 1px solid rgba(234, 179, 8, 0.5);
 }
 
+.badge-test {
+    background: #512d78;
+    color: #a692bb;
+    border: 1px solid #a692bb;
+}
+
 .badge-discontinued {
     background: rgba(148, 163, 184, 0.2);
     color: #94a3b8;
@@ -502,16 +508,16 @@ body {
 }
 
 /* Colunas da linha */
-.row-status   { flex-shrink: 0; width: 150px; text-align: center; font-size: 0.9rem;}
-.row-nome     { flex: 1; min-width: 0; font-weight: 700; font-size: 0.9rem;
+.row-status   { flex-shrink: 0; width: 150px; text-align: center; font-size: 0.8rem;}
+.row-nome     { flex: 1; min-width: 0; font-weight: 700; font-size: 0.8rem;
                 white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left;}
 .row-responsavel { flex-shrink: 0; width: 170px; font-size: 0.8rem;
                    color: var(--text-secondary); white-space: nowrap;
                    overflow: hidden; text-overflow: ellipsis; text-align: left; }
 .row-versao   { flex-shrink: 0; width: 68px; font-family: monospace, monospace;
-                font-size: 0.82rem; font-weight: 800; color: var(--accent-cyan);
+                font-size: 0.8rem; font-weight: 800; color: var(--accent-cyan);
                 text-align: center; }
-.row-data     { flex-shrink: 0; width: 120px; font-size: 0.75rem;
+.row-data     { flex-shrink: 0; width: 120px; font-size: 0.8rem;
                 color: var(--text-secondary); text-align: right;
                 display: flex; align-items: center; justify-content: flex-end;
                 gap: 0.3rem; }
@@ -577,25 +583,40 @@ body {
 /* Stats */
 .stats-container {
     display: grid;
-    /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
-    /* 1. Define o grid padrão para telas grandes: 3 colunas iguais */
-    grid-template-columns: repeat(3, 1fr);
-    /* 2. Opcional: Define a altura das 2 linhas (ex: automáticas ou fixas) */
+    /*
+     * Desktop: coluna Total (fixa) + 3 colunas iguais para os status
+     * O card Total ocupa as 2 linhas à esquerda; os 6 status preenchem 3×2 à direita
+     */
+    grid-template-columns: minmax(140px, 180px) repeat(3, 1fr);
     grid-template-rows: repeat(2, auto);
-    gap: 1.5rem;
+    gap: 1rem;
     margin-bottom: 2rem;
+}
+
+/* Card Total — coluna isolada, altura total (2 linhas) */
+.stat-card-total {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-card-total .stat-number {
+    font-size: 3rem;
 }
 
 .stat-card {
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: 1rem;
-    padding: 1.5rem;
+    padding: 1.25rem 1rem;
     text-align: center;
 }
 
 .stat-number {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 800;
     background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
     -webkit-background-clip: text;
@@ -604,35 +625,13 @@ body {
 }
 
 .stat-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--text-secondary);
-    margin-top: 0.5rem;
+    margin-top: 0.4rem;
     font-weight: 600;
 }
-
-/* Selects globais */
-/* * select {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #1e293b;
-    border: 1px solid var(--border-color);
-    border-radius: 0.75rem;
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    outline: none;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-}
-
-* select:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-} */
 
 * select option {
     background-color: #1e293b;
@@ -837,8 +836,25 @@ body {
     }
 
     .stats-container {
-        grid-template-columns: repeat(2, 1fr);
+        /*
+         * Mobile: Total ocupa linha inteira (col 1/-1);
+         * 6 status preenchem 3 colunas × 2 linhas abaixo
+         */
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto auto auto;
     }
+
+    .stat-card-total {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        flex-direction: row;
+        gap: 0.75rem;
+        padding: 1rem 1.5rem;
+        justify-content: center;
+    }
+
+    .stat-card-total .stat-number { font-size: 2rem; }
+    .stat-card-total .stat-label  { margin-top: 0; align-self: center; }
 
     /* Lista ocupa 100% da tela */
     .cards-grid {
@@ -856,7 +872,7 @@ body {
     .bi-row {
         display: grid;
         grid-template-columns: 1fr auto;
-        row-gap: 0.3rem;
+        row-gap: 0.8rem;
         column-gap: 0.75rem;
         padding: 0.625rem 0.875rem;
         transform: none !important; /* desativa translateX do hover */
@@ -864,7 +880,7 @@ body {
 
     .row-nome {
         grid-column: 1;
-        grid-row: 1;
+        grid-row: 2;
         font-size: 0.875rem;
         white-space: nowrap;
         overflow: hidden;
@@ -873,14 +889,23 @@ body {
 
     .row-status {
         grid-column: 1;
-        grid-row: 2;
+        grid-row: 1;
         width: auto;
         align-self: center;
+        text-align: left;
+    }
+
+    .row-versao {
+        grid-column: 1;
+        grid-row: 3;
+        width: auto;
+        align-self: center;
+        text-align: left;
     }
 
     .row-responsavel {
         grid-column: 1;
-        grid-row: 3;
+        grid-row: 4;
         width: auto;
         max-width: none;
         font-size: 0.78rem;
@@ -894,13 +919,14 @@ body {
     .row-actions {
         grid-column: 2;
         grid-row: 1 / 4;
-        align-self: center;
+        align-self: right;
+        justify-self: end;
     }
 
     /* Colunas desnecessárias no mobile */
-    .row-versao,
-    .row-data,
-    .row-desc-wrap { display: none; }
+    /* .row-versao, */
+    /* .row-data, */
+    /* .row-desc-wrap { display: none; } */
 
     /* Modais */
     .modal-content {

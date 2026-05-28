@@ -12,7 +12,7 @@
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <div class="logo">⚡ Dashboard BI</div>
+            <div class="logo">⚡ Dashboard BI Manager</div>
             <div style="display: flex; gap: 1rem;">
                 <button class="btn btn-help" onclick="openHelp()">
                     <i data-lucide="help-circle" style="width: 18px; height: 18px;"></i>
@@ -31,17 +31,21 @@
 
         <!-- Stats -->
         <div class="stats-container" id="statsContainer">
-            <div class="stat-card">
+
+            <!-- Total — ocupa coluna isolada (desktop) ou linha isolada (mobile) -->
+            <div class="stat-card stat-card-total">
                 <div class="stat-number" id="totalCount">0</div>
-                <div class="stat-label">Total de Dashboards</div>
+                <div class="stat-label">Total</div>
             </div>
+
+            <!-- 6 status — 3 colunas × 2 linhas -->
             <div class="stat-card">
                 <div class="stat-number" id="prodCount">0</div>
-                <div class="stat-label">Em Produção</div>
+                <div class="stat-label">Produção</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="devCount">0</div>
-                <div class="stat-label">Em Desenvolvimento</div>
+                <div class="stat-label">Desenvolvimento</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="maintCount">0</div>
@@ -52,9 +56,14 @@
                 <div class="stat-label">Homologação</div>
             </div>
             <div class="stat-card">
+                <div class="stat-number" id="testeCount">0</div>
+                <div class="stat-label">Teste</div>
+            </div>
+            <div class="stat-card">
                 <div class="stat-number" id="discCount">0</div>
                 <div class="stat-label">Descontinuado</div>
             </div>
+
         </div>
 
         <!-- Filtros -->
@@ -73,6 +82,7 @@
                     <option value="">Todos os Status</option>
                     <option value="Desenvolvimento">Desenvolvimento</option>
                     <option value="Produção">Produção</option>
+                    <option value="Teste">Teste</option>
                     <option value="Manutenção">Manutenção</option>
                     <option value="Homologação">Homologação</option>
                     <option value="Descontinuado">Descontinuado</option>
@@ -129,6 +139,7 @@
                         <option value="">Selecione um status</option>
                         <option value="Desenvolvimento">Desenvolvimento</option>
                         <option value="Produção">Produção</option>
+                        <option value="Teste">Teste</option>
                         <option value="Manutenção">Manutenção</option>
                         <option value="Homologação">Homologação</option>
                         <option value="Descontinuado">Descontinuado</option>

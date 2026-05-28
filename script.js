@@ -268,9 +268,10 @@ function renderDashboardsFiltrados() {
     const statusOrder = {
         'Manutenção':    0,
         'Desenvolvimento': 1,
-        'Homologação':   2,
-        'Produção':      3,
-        'Descontinuado': 4,
+        'Teste': 2,
+        'Homologação':   3,
+        'Produção':      4,
+        'Descontinuado': 5,
     };
 
     const sorted = [...dashboardsFiltrados].sort((a, b) =>
@@ -362,6 +363,7 @@ function getStatusClass(status) {
     if (status === 'Manutenção')      return 'badge-maintenance';
     if (status === 'Homologação')     return 'badge-homologacao';
     if (status === 'Descontinuado')   return 'badge-discontinued';
+    if (status === 'Teste')   return 'badge-test';
     return 'badge-discontinued';
 }
 
@@ -371,14 +373,16 @@ function updateStats() {
     const prod  = allDashboards.filter(d => d['Status'] === 'Produção').length;
     const maint = allDashboards.filter(d => d['Status'] === 'Manutenção').length;
     const homo  = allDashboards.filter(d => d['Status'] === 'Homologação').length;
+    const teste = allDashboards.filter(d => d['Status'] === 'Teste').length;
     const disc  = allDashboards.filter(d => d['Status'] === 'Descontinuado').length;
 
-    document.getElementById('totalCount').textContent = total;
-    document.getElementById('devCount').textContent   = dev;
-    document.getElementById('prodCount').textContent  = prod;
-    document.getElementById('maintCount').textContent = maint;
-    document.getElementById('homoCount').textContent  = homo;
-    document.getElementById('discCount').textContent  = disc;
+    document.getElementById('totalCount').textContent  = total;
+    document.getElementById('prodCount').textContent   = prod;
+    document.getElementById('devCount').textContent    = dev;
+    document.getElementById('maintCount').textContent  = maint;
+    document.getElementById('homoCount').textContent   = homo;
+    document.getElementById('testeCount').textContent  = teste;
+    document.getElementById('discCount').textContent   = disc;
 }
 
 // ===== MODAL =====
