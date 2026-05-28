@@ -840,8 +840,8 @@ body {
          * Mobile: Total ocupa linha inteira (col 1/-1);
          * 6 status preenchem 3 colunas × 2 linhas abaixo
          */
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: auto auto auto;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto auto;
     }
 
     .stat-card-total {
