@@ -18,6 +18,10 @@
                     <i data-lucide="help-circle" style="width: 18px; height: 18px;"></i>
                     Ajuda
                 </button>
+                <a class="btn btn-help" href="https://docs.google.com/spreadsheets/d/1tby_dHzj3WBSE3AHS7OkXxXvTWe-fH9MpQgZUfeOY3I/edit?gid=0#gid=0">
+                    <i data-lucide="table-cells-merge" style="width: 18px; height: 18px;"></i>
+                    Planilha
+                </a>
                 <button class="btn btn-primary" onclick="openCreateModal()">
                     <i data-lucide="plus" style="width: 18px; height: 18px;"></i>
                     Novo Dashboard
@@ -128,9 +132,13 @@
 
                 <div class="form-group">
                     <label class="form-label">Responsável</label>
-                    <select id="formResponsavel" class="form-select">
-                        <option value="">Sem responsável</option>
-                    </select>
+                    <div class="multiselect-wrap" id="responsavelWrap">
+                        <button type="button" class="multiselect-trigger" id="responsavelTrigger" onclick="toggleResponsavelDropdown()">
+                            <span id="responsavelLabel">Sem responsável</span>
+                            <i data-lucide="chevron-down" style="width:14px;height:14px;flex-shrink:0;margin-left:auto;transition:transform 0.2s;"></i>
+                        </button>
+                        <div class="multiselect-dropdown" id="responsavelDropdown"></div>
+                    </div>
                 </div>
 
                 <div class="form-group">

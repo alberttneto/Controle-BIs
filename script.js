@@ -35,17 +35,112 @@ async function loadUsuarios() {
     }
 }
 
-function populateResponsavelSelect(selectedValue = '') {
-    const select = document.getElementById('formResponsavel');
-    select.innerHTML = '<option value="">Sem responsável</option>';
+// ===== MULTI-SELECT DE RESPONSÁVEIS =====
+
+function populateResponsavelSelect(selectedValues = []) {
+    // selectedValues pode ser string única ou array
+    if (typeof selectedValues === 'string') {
+        selectedValues = splitResponsaveis(selectedValues);
+    }
+
+    const dropdown = document.getElementById('responsavelDropdown');
+    dropdown.innerHTML = '';
+
+    // Opção "Sem responsável"
+    const nenhum = document.createElement('label');
+    nenhum.className = 'multiselect-option multiselect-option-none';
+    nenhum.innerHTML = `
+        <input type="checkbox" value="" id="resp_nenhum" onchange="onResponsavelNenhumChange(this)">
+        <span>Sem responsável</span>`;
+    nenhum.querySelector('input').checked = selectedValues.length === 0;
+    dropdown.appendChild(nenhum);
+
+    // Divisor
+    const div = document.createElement('div');
+    div.className = 'multiselect-divider';
+    dropdown.appendChild(div);
+
+    // Um item por usuário
     [...usuarios].sort((a, b) => a.localeCompare(b, 'pt-BR')).forEach(u => {
-        const opt = document.createElement('option');
-        opt.value = u;
-        opt.textContent = u;
-        if (u === selectedValue) opt.selected = true;
-        select.appendChild(opt);
+        const label = document.createElement('label');
+        label.className = 'multiselect-option';
+        label.innerHTML = `
+            <input type="checkbox" value="${u}" onchange="onResponsavelChange()">
+            <span>${u}</span>`;
+        label.querySelector('input').checked = selectedValues.includes(u);
+        dropdown.appendChild(label);
     });
+
+    updateResponsavelLabel();
 }
+
+function toggleResponsavelDropdown() {
+    const wrap    = document.getElementById('responsavelWrap');
+    const trigger = document.getElementById('responsavelTrigger');
+    const isOpen  = wrap.classList.toggle('open');
+    // Gira o chevron
+    const icon = trigger.querySelector('i');
+    if (icon) icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+
+function closeResponsavelDropdown() {
+    const wrap    = document.getElementById('responsavelWrap');
+    const trigger = document.getElementById('responsavelTrigger');
+    if (!wrap) return;
+    wrap.classList.remove('open');
+    const icon = trigger?.querySelector('i');
+    if (icon) icon.style.transform = 'rotate(0deg)';
+}
+
+function onResponsavelNenhumChange(checkbox) {
+    if (checkbox.checked) {
+        // Desmarca todos os demais
+        document.querySelectorAll('#responsavelDropdown input[type="checkbox"]:not(#resp_nenhum)')
+            .forEach(cb => cb.checked = false);
+    }
+    updateResponsavelLabel();
+}
+
+function onResponsavelChange() {
+    // Se algum nome estiver marcado, desmarca "Sem responsável"
+    const algumMarcado = [...document.querySelectorAll(
+        '#responsavelDropdown input[type="checkbox"]:not(#resp_nenhum)'
+    )].some(cb => cb.checked);
+
+    const nenhum = document.getElementById('resp_nenhum');
+    if (nenhum) nenhum.checked = !algumMarcado;
+    updateResponsavelLabel();
+}
+
+function updateResponsavelLabel() {
+    const selecionados = getSelectedResponsaveis();
+    const label = document.getElementById('responsavelLabel');
+    if (!label) return;
+    if (selecionados.length === 0) {
+        label.textContent = 'Sem responsável';
+        label.style.color = 'var(--text-secondary)';
+    } else if (selecionados.length === 1) {
+        label.textContent = selecionados[0];
+        label.style.color = 'var(--text-primary)';
+    } else {
+        label.textContent = `${selecionados.length} responsáveis selecionados`;
+        label.style.color = 'var(--text-primary)';
+    }
+}
+
+function getSelectedResponsaveis() {
+    return [...document.querySelectorAll(
+        '#responsavelDropdown input[type="checkbox"]:not(#resp_nenhum):checked'
+    )].map(cb => cb.value);
+}
+
+// Fecha dropdown ao clicar fora
+document.addEventListener('click', (e) => {
+    const wrap = document.getElementById('responsavelWrap');
+    if (wrap && !wrap.contains(e.target)) closeResponsavelDropdown();
+});
+
+// ===== FIM MULTI-SELECT =====
 // ===== FIM USUÁRIOS =====
 
 // ===== DEBUG HELPER =====
@@ -442,7 +537,8 @@ function openCreateModal() {
     document.getElementById('submitText').textContent = 'Criar';
     document.getElementById('formId').value = '';
     document.getElementById('form').reset();
-    populateResponsavelSelect();
+    populateResponsavelSelect([]);
+    closeResponsavelDropdown();
     document.getElementById('versaoSection').style.display = 'none';
     document.getElementById('modal').classList.add('active');
 }
@@ -456,7 +552,8 @@ function openEditModal(id) {
     document.getElementById('submitText').textContent = 'Atualizar';
     document.getElementById('formId').value = id;
     document.getElementById('formName').value = dashboard['Nome do BI'];
-    populateResponsavelSelect(dashboard['Responsável']);
+    populateResponsavelSelect(dashboard['Responsável'] || '');
+    closeResponsavelDropdown();
     document.getElementById('formStatus').value = dashboard['Status'];
     document.getElementById('formDescricao').value = dashboard['Descrição'] || '';
 
@@ -495,7 +592,7 @@ async function handleSubmit(event) {
 
     const id          = document.getElementById('formId').value;
     const nome        = document.getElementById('formName').value;
-    const responsavel = document.getElementById('formResponsavel').value;
+    const responsavel = getSelectedResponsaveis().join(';');
     const status      = document.getElementById('formStatus').value;
     const descricao   = document.getElementById('formDescricao').value;
 
