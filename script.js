@@ -592,7 +592,7 @@ async function handleSubmit(event) {
 
     const id          = document.getElementById('formId').value;
     const nome        = document.getElementById('formName').value;
-    const responsavel = getSelectedResponsaveis().join(';');
+    const responsavel = getSelectedResponsaveis().join(',');
     const status      = document.getElementById('formStatus').value;
     const descricao   = document.getElementById('formDescricao').value;
 
@@ -666,42 +666,6 @@ async function handleSubmit(event) {
         hideLoading();
     }
 }
-
-// async function deleteDashboard(id) {
-//     if (!confirm('Tem certeza que deseja deletar este dashboard?')) return;
-
-//     showLoading('Deletando...');
-
-//     try {
-//         const formData = new FormData();
-//         formData.append('action', 'DELETE');
-//         formData.append('id', id);
-
-//         fetch(CONFIG.APPS_SCRIPT_URL, {
-//             method: 'POST',
-//             body: formData,
-//             mode: 'no-cors'
-//         });
-
-//         allDashboards = allDashboards.filter(d => d['ID'] !== id);
-//         atualizarResponsaveisUnicos();
-//         aplicarFiltros();
-//         updateStats();
-//         hideLoading();
-//         showToast('Dashboard deletado com sucesso!', 'success');
-
-//         console.log('%c⏳ Sync em background agendado para 15s...', 'color: #f59e0b; font-weight: bold');
-//         setTimeout(() => {
-//             console.log('%c🔄 Sync silencioso com Google Sheets após DELETE...', 'color: #06b6d4; font-weight: bold');
-//             loadDashboards(true);
-//         }, 15000);
-
-//     } catch (error) {
-//         console.error('Erro ao deletar:', error);
-//         showToast('Erro ao deletar dashboard', 'error');
-//         hideLoading();
-//     }
-// }
 
 // ===== LOADING & TOAST =====
 
