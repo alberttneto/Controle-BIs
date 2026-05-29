@@ -243,7 +243,7 @@ function aplicarFiltros() {
     dashboardsFiltrados = allDashboards.filter(dash => {
         const nomeMatch       = dash['Nome do BI'].toLowerCase().includes(nome);
         const statusMatch     = !status     || dash['Status']      === status;
-        const responsavelMatch = !responsavel || dash['Responsável'] === responsavel;
+        const responsavelMatch = !responsavel || splitResponsaveis(dash['Responsável']).includes(responsavel);
         return nomeMatch && statusMatch && responsavelMatch;
     });
 
@@ -314,7 +314,7 @@ function renderDashboardsFiltrados() {
                     <span class="badge ${statusClass}">${dash['Status']}</span>
                 </span>
                 <span class="row-nome" title="${dash['Nome do BI']}">${dash['Nome do BI']}</span>
-                <span class="row-responsavel" title="${dash['Responsável'] || ''}">${dash['Responsável'] || '—'}</span>
+                <span class="row-responsavel">${renderResponsavel(dash['Responsável'])}</span>
                 <span class="row-versao">${versaoAtual}</span>
                 <span class="row-data">${ultimaAtualizacao}</span>
                 ${descIcon}
@@ -332,7 +332,14 @@ function renderDashboardsFiltrados() {
 }
 
 function atualizarResponsaveisUnicos() {
-    responsaveisUnicos = [...new Set(allDashboards.map(d => d['Responsável']))].sort();
+    // Extrai nomes individuais de campos que podem conter múltiplos responsáveis
+    const todosNomes = [];
+    allDashboards.forEach(d => {
+        splitResponsaveis(d['Responsável']).forEach(nome => {
+            if (!todosNomes.includes(nome)) todosNomes.push(nome);
+        });
+    });
+    responsaveisUnicos = todosNomes.sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
     const selectResponsavel = document.getElementById('filtroResponsavel');
     const valueSelecionado  = selectResponsavel.value;
@@ -353,6 +360,48 @@ function atualizarResponsaveisUnicos() {
 function forceRefreshDashboards() {
     console.log('%c🔄 Recarregamento manual iniciado pelo usuário', 'color: #10b981; font-weight: bold');
     loadDashboards();
+}
+
+// ===== RESPONSÁVEIS — múltiplos =====
+
+const AVATAR_COLORS = [
+    '#1d4ed8', '#7c3aed', '#059669', '#d97706',
+    '#dc2626', '#0891b2', '#6d28d9', '#db2777'
+];
+
+function getAvatarColor(name) {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
+function getInitials(name) {
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function splitResponsaveis(str) {
+    if (!str || str.trim() === '') return [];
+    return str.split(/[;,\n]+/).map(s => s.trim()).filter(s => s.length > 0);
+}
+
+function renderResponsavel(responsavelStr) {
+    const pessoas = splitResponsaveis(responsavelStr);
+    if (pessoas.length === 0) {
+        return '<span class="responsavel-text" style="color:var(--text-secondary);">—</span>';
+    }
+    if (pessoas.length === 1) {
+        return `<span class="responsavel-text">${pessoas[0]}</span>`;
+    }
+    const avatars = pessoas.map(nome => `
+        <div class="avatar" style="background:${getAvatarColor(nome)};" title="${nome}">
+            ${getInitials(nome)}
+            <div class="avatar-tooltip">${nome}</div>
+        </div>`).join('');
+    return `<div class="avatar-group">${avatars}</div>`;
 }
 
 // ===== STATUS =====
