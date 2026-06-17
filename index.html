@@ -1,332 +1,110 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard BI Manager</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfólio de Dashboards | TJGO</title>
+  <meta name="description" content="Portfólio de Dashboards da Coordenadoria de Transformação Digital - TJGO">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">⚡ Dashboard BI Manager</div>
-            <div style="display: flex; gap: 1rem;">
-                <button class="btn btn-help" onclick="openHelp()">
-                    <i data-lucide="help-circle" style="width: 18px; height: 18px;"></i>
-                    Ajuda
-                </button>
-                <a class="btn btn-help" href="https://docs.google.com/spreadsheets/d/1tby_dHzj3WBSE3AHS7OkXxXvTWe-fH9MpQgZUfeOY3I/edit?gid=0#gid=0">
-                    <i data-lucide="table-cells-merge" style="width: 18px; height: 18px;"></i>
-                    Planilha
-                </a>
-                <button class="btn btn-primary" onclick="openCreateModal()">
-                    <i data-lucide="plus" style="width: 18px; height: 18px;"></i>
-                    Novo Dashboard
-                </button>
-            </div>
-        </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 py-8">
+  <!-- ===================== TOPO INSTITUCIONAL ===================== -->
+  <header class="top-bar">
+    <div class="container top-bar-content">
+      <div class="brand">
+        <!-- Logo do TJGO: substitua "logo.png" pelo brasão oficial, se desejar -->
+        <img src="images/logo2.png" alt="Brasão do TJGO" class="brand-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="brand-fallback-icon" aria-hidden="true">⚖️</div>
+        <!-- <div class="brand-text">
+          <strong>PODER JUDICIÁRIO</strong>
+          <span>Tribunal de Justiça do Estado de Goiás</span>
+          <span>Diretoria de Soluções em Tecnologia da Informação</span>
+          <span>Coordenadoria de Transformação Digital</span>
+        </div> -->
+        <span class="brand-title">Portfólio de Dashboards</span>
+      </div>
 
-        <!-- Stats -->
-        <div class="stats-container" id="statsContainer">
+      <nav class="top-nav" aria-label="Navegação principal">
+        <a href="#" class="active">Página inicial</a>
+        <!-- <a href="#">Sobre</a>
+        <a href="#">Página do projeto</a>
+        <a href="#">Dashboard BI Manager</a> -->
+      </nav>
+    </div>
+  </header>
 
-            <!-- Total — ocupa coluna isolada (desktop) ou linha isolada (mobile) -->
-            <div class="stat-card stat-card-total">
-                <div class="stat-number" id="totalCount">0</div>
-                <div class="stat-label">Total</div>
-            </div>
+  <div class="sub-bar">
+    <p class="sub-bar-link">Coordenadoria de Transformação Digital</p>
+  </div>
 
-            <!-- 6 status — 3 colunas × 2 linhas -->
-            <div class="stat-card">
-                <div class="stat-number" id="prodCount">0</div>
-                <div class="stat-label">Produção</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="devCount">0</div>
-                <div class="stat-label">Desenvolvimento</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="maintCount">0</div>
-                <div class="stat-label">Manutenção</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="homoCount">0</div>
-                <div class="stat-label">Homologação</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="testeCount">0</div>
-                <div class="stat-label">Teste</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="discCount">0</div>
-                <div class="stat-label">Descontinuado</div>
-            </div>
+  <!-- ===================== BANNER DE TÍTULO ===================== -->
+  <section class="hero-banner">
+    <h1>Portfólio de Dashboards</h1>
+    <img src="https://i.ibb.co/84GWR5KQ/Recursos.png" alt="Recursos" border="0">
+  </section>
 
-        </div>
-
-        <!-- Filtros -->
-        <div style="margin-bottom: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-
-            <div>
-                <label>Buscar por Nome</label>
-                <input type="text" id="filtroNome" placeholder="Digite o nome do BI..."
-                    style="width: 100%; padding: 0.75rem; background: rgba(59, 130, 246, 0.05); border: 1px solid var(--border-color); border-radius: 0.75rem; color: var(--text-primary); font-size: 0.875rem; transition: all 0.3s;"
-                    oninput="aplicarFiltros()">
-            </div>
-
-            <div>
-                <label>Status</label>
-                <select id="filtroStatus" class="form-select" onchange="aplicarFiltros()">
-                    <option value="">Todos os Status</option>
-                    <option value="Desenvolvimento">Desenvolvimento</option>
-                    <option value="Produção">Produção</option>
-                    <option value="Teste">Teste</option>
-                    <option value="Manutenção">Manutenção</option>
-                    <option value="Homologação">Homologação</option>
-                    <option value="Descontinuado">Descontinuado</option>
-                </select>
-            </div>
-
-            <div>
-                <label>Responsável</label>
-                <select id="filtroResponsavel" class="form-select" onchange="aplicarFiltros()">
-                    <option value="">Todos os Responsáveis</option>
-                </select>
-            </div>
-
-        </div>
-
-        <!-- Cards Grid -->
-        <div class="cards-grid" id="cardsContainer">
-            <div class="empty-state">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <p style="color: var(--text-secondary); font-size: 0.875rem;">Carregando dashboards...</p>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Modal -->
-    <div class="modal" id="modal">
-        <div class="modal-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2 id="modalTitle" style="font-size: 1.5rem; font-weight: 800;">Novo Dashboard</h2>
-                <button onclick="closeModal()" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.5rem;">×</button>
-            </div>
-
-            <form id="form" onsubmit="handleSubmit(event)">
-                <input type="hidden" id="formId" value="">
-
-                <div class="form-group">
-                    <label class="form-label">Nome do Dashboard *</label>
-                    <input type="text" id="formName" class="form-input" placeholder="Ex: Dashboard de Vendas" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Responsável</label>
-                    <div class="multiselect-wrap" id="responsavelWrap">
-                        <button type="button" class="multiselect-trigger" id="responsavelTrigger" onclick="toggleResponsavelDropdown()">
-                            <span id="responsavelLabel">Sem responsável</span>
-                            <i data-lucide="chevron-down" style="width:14px;height:14px;flex-shrink:0;margin-left:auto;transition:transform 0.2s;"></i>
-                        </button>
-                        <div class="multiselect-dropdown" id="responsavelDropdown"></div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Status *</label>
-                    <select id="formStatus" class="form-select" required>
-                        <option value="">Selecione um status</option>
-                        <option value="Desenvolvimento">Desenvolvimento</option>
-                        <option value="Produção">Produção</option>
-                        <option value="Teste">Teste</option>
-                        <option value="Manutenção">Manutenção</option>
-                        <option value="Homologação">Homologação</option>
-                        <option value="Descontinuado">Descontinuado</option>
-                    </select>
-                </div>
-
-                <!-- Seção de versão — visível apenas na edição -->
-                <div class="form-group" id="versaoSection" style="display: none;">
-                    <label class="form-label">Versão</label>
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.625rem 0.875rem; background: var(--bg-tertiary); border-radius: 0.625rem; margin-bottom: 0.75rem; border: 1px solid var(--border-color);">
-                        <span style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Atual</span>
-                        <span id="versaoAtualDisplay" style="font-family: monospace, monospace; font-weight: 800; color: var(--accent-cyan); font-size: 1rem;">V1.0.0</span>
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;">
-                        <label class="version-option sel-manter" data-tipo="manter" onclick="selectVersionOption('manter')">
-                            <input type="radio" name="versionBump" value="manter" checked style="display:none;">
-                            <span class="version-option-label">Manter</span>
-                        </label>
-                        <label class="version-option" data-tipo="maior" onclick="selectVersionOption('maior')">
-                            <input type="radio" name="versionBump" value="maior" style="display:none;">
-                            <span class="version-option-label">Major</span>
-                        </label>
-                        <label class="version-option" data-tipo="menor" onclick="selectVersionOption('menor')">
-                            <input type="radio" name="versionBump" value="menor" style="display:none;">
-                            <span class="version-option-label">Minor</span>
-                        </label>
-                        <label class="version-option" data-tipo="patch" onclick="selectVersionOption('patch')">
-                            <input type="radio" name="versionBump" value="patch" style="display:none;">
-                            <span class="version-option-label">Patch</span>
-                        </label>
-                    </div>
-                    <p id="versaoPreview" style="text-align: right; font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem; min-height: 1.2em;"></p>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Descrição</label>
-                    <textarea id="formDescricao" class="form-input" placeholder="Ex: Dashboard com KPIs de vendas..." style="resize: vertical; min-height: 80px;"></textarea>
-                </div>
-
-                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <button type="submit" class="btn btn-primary" style="flex: 1;">
-                        <span id="submitText">Salvar</span>
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()" style="flex: 1;">
-                        Cancelar
-                    </button>
-                </div>
-            </form>
-        </div>
+  <!-- ===================== FILTROS ===================== -->
+  <section class="filters-bar container" aria-label="Filtros de busca">
+    <div class="search-wrapper">
+      <span class="search-icon" aria-hidden="true">🔎</span>
+      <input
+        type="search"
+        id="searchInput"
+        class="search-input"
+        placeholder="Buscar dashboard pelo nome..."
+        aria-label="Buscar dashboard pelo nome"
+        autocomplete="off"
+      >
     </div>
 
-    <!-- Modal de Ajuda -->
-    <div class="modal" id="modalAjuda">
-        <div class="modal-content help-modal-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.75rem;">
-                <h2 style="font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 0.75rem;">
-                    <i data-lucide="help-circle" style="width: 22px; height: 22px; color: var(--accent-cyan);"></i>
-                    Ajuda
-                </h2>
-                <button onclick="closeHelp()" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.5rem; line-height: 1;">×</button>
-            </div>
-
-            <div class="help-grid">
-
-                <!-- Bloco 1: Status -->
-                <div class="help-block">
-                    <h3 class="help-block-title">
-                        <i data-lucide="tag" style="width: 16px; height: 16px;"></i>
-                        Status dos BIs
-                    </h3>
-                    <ul class="help-list">
-                        <li>
-                            <span class="badge badge-development help-badge">Desenvolvimento</span>
-                            <p>BI em fase de construção. Ainda não está disponível para uso — a equipe está criando e estruturando os dados e visualizações.</p>
-                        </li>
-                        <li>
-                            <span class="badge badge-homologacao help-badge">Homologação</span>
-                            <p>BI finalizado e em fase de testes. Está sendo validado antes de ser liberado oficialmente para uso em produção.</p>
-                        </li>
-                        <li>
-                            <span class="badge badge-production help-badge">Produção</span>
-                            <p>BI ativo e disponível para uso pela equipe. Está estável e atualizado.</p>
-                        </li>
-                        <li>
-                            <span class="badge badge-maintenance help-badge">Manutenção</span>
-                            <p>BI temporariamente fora do ar. Pode estar em correção de dados, ajuste de filtros ou atualização de estrutura.</p>
-                        </li>
-                        <li>
-                            <span class="badge badge-discontinued help-badge">Descontinuado</span>
-                            <p>BI desativado e fora de uso. Mantido no sistema apenas para histórico.</p>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Divisor vertical (desktop) / horizontal (mobile) -->
-                <div class="help-divider"></div>
-
-                <!-- Bloco 2: Versões -->
-                <div class="help-block">
-                    <h3 class="help-block-title">
-                        <i data-lucide="git-branch" style="width: 16px; height: 16px;"></i>
-                        Sistema de Versões
-                    </h3>
-                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.25rem; line-height: 1.6;">
-                        As versões seguem o formato <strong style="color: var(--accent-cyan); font-family: monospace;">V<em>X</em>.<em>Y</em>.<em>Z</em></strong>, onde cada número representa um nível de mudança:
-                    </p>
-                    <ul class="help-list">
-                        <li>
-                            <span class="version-chip chip-manter">Manter</span>
-                            <p>Nenhuma alteração na versão. Use ao editar apenas a descrição, o responsável ou o status — sem mudanças no conteúdo do BI.</p>
-                        </li>
-                        <li>
-                            <span class="version-chip chip-maior">Major <span style="font-family:monospace; font-size:0.75rem;">X+1.0.0</span></span>
-                            <p>Reformulação completa do BI. Mudanças estruturais profundas — nova fonte de dados, redesign total ou quebra de compatibilidade com a versão anterior.</p>
-                        </li>
-                        <li>
-                            <span class="version-chip chip-menor">Minor <span style="font-family:monospace; font-size:0.75rem;">X.Y+1.0</span></span>
-                            <p>Nova funcionalidade ou visualização adicionada ao BI existente, sem quebrar o que já estava funcionando.</p>
-                        </li>
-                        <li>
-                            <span class="version-chip chip-patch">Patch <span style="font-family:monospace; font-size:0.75rem;">X.Y.Z+1</span></span>
-                            <p>Correção pontual: ajuste de filtro, correção de dado errado, pequena melhoria de texto ou layout.</p>
-                        </li>
-                    </ul>
-                    <p style="color: var(--text-secondary); font-size: 0.78rem; margin-top: 1rem; line-height: 1.5; border-top: 1px solid var(--border-color); padding-top: 0.875rem;">
-                        💡 A <strong style="color: var(--text-primary);">Última Atualização</strong> é registrada automaticamente sempre que você salvar com Major, Minor ou Patch selecionado.
-                    </p>
-                </div>
-
-            </div>
-        </div>
+    <div class="status-filter" id="statusFilter" role="group" aria-label="Filtrar por status">
+      <!-- Botões de status injetados dinamicamente pelo JS, com base nos dados -->
+      <button class="status-btn active" data-status="todos">Todos</button>
     </div>
+  </section>
 
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-message">
-            <div class="spinner"></div>
-            <p id="loadingText">Processando...</p>
-        </div>
+  <!-- ===================== ESTADOS (loading / erro / vazio) ===================== -->
+  <div id="stateContainer" class="state-container container" hidden>
+    <p id="stateMessage"></p>
+  </div>
+
+  <!-- ===================== CONTEÚDO: SEÇÕES POR CATEGORIA ===================== -->
+  <main class="container" id="categoriesContainer" aria-live="polite">
+    <!-- Seções (uma por Categoria) com seus respectivos grids de cards são injetadas pelo JS -->
+  </main>
+
+  <footer class="app-footer">
+    <div class="container">
+      <p>Atualizado automaticamente a partir do Google Sheets &middot; <span id="lastUpdate"></span></p>
     </div>
+  </footer>
 
-    <script src="script.js"></script>
-<!-- Code injected by live-server -->
-<script>
-	// <![CDATA[  <-- For SVG support
-	if ('WebSocket' in window) {
-		(function () {
-			function refreshCSS() {
-				var sheets = [].slice.call(document.getElementsByTagName("link"));
-				var head = document.getElementsByTagName("head")[0];
-				for (var i = 0; i < sheets.length; ++i) {
-					var elem = sheets[i];
-					var parent = elem.parentElement || head;
-					parent.removeChild(elem);
-					var rel = elem.rel;
-					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
-						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-					}
-					parent.appendChild(elem);
-				}
-			}
-			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-			var address = protocol + window.location.host + window.location.pathname + '/ws';
-			var socket = new WebSocket(address);
-			socket.onmessage = function (msg) {
-				if (msg.data == 'reload') window.location.reload();
-				else if (msg.data == 'refreshcss') refreshCSS();
-			};
-			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-				console.log('Live reload enabled.');
-				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-			}
-		})();
-	}
-	else {
-		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-	}
-	// ]]>
-</script>
+  <!-- ===================== MODAL DE DETALHES ===================== -->
+  <div class="modal-overlay" id="modalOverlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" aria-label="Fechar modal">&times;</button>
+
+      <div class="modal-cover">
+        <img id="modalImage" src="" alt="" loading="lazy">
+        <span class="badge" id="modalStatus"></span>
+      </div>
+
+      <div class="modal-body">
+        <h2 id="modalTitle"></h2>
+        <p class="modal-meta" id="modalMeta"></p>
+        <p class="modal-description" id="modalDescription"></p>
+
+        <dl class="modal-details" id="modalDetails">
+          <!-- Detalhes extras (PROAD, versão, responsável, etc.) injetados pelo JS -->
+        </dl>
+
+        <!-- Botões de ação: cada um em sua própria linha com ícone de cópia individual (gerados pelo JS) -->
+        <div class="modal-actions" id="modalActions"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

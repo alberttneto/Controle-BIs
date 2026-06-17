@@ -1,72 +1,32 @@
-# Dashboard BI Manager
+# Portfólio de Dashboards — TJGO
 
-Sistema web para centralizar e gerenciar dashboards BI da equipe. Permite criar, editar e excluir registros com interface em dark mode, atualização imediata na tela e persistência via Google Sheets.
+Página web para catalogar e apresentar os dashboards produzidos pela **Coordenadoria de Transformação Digital** do Tribunal de Justiça do Estado de Goiás (TJGO).
 
----
+## O que faz
 
-## Funcionalidades
+- Consome os dados de uma planilha **Google Sheets** publicada como CSV
+- Agrupa os dashboards por **categoria** e exibe cards com status, descrição e links
+- Permite **busca por nome** e **filtro por status** (Produção, Homologação, etc.)
+- Ao clicar em um card, abre um **modal de detalhes** com imagem, metadados e botões de acesso
 
-- Cadastro, edição e exclusão de dashboards (CRUD completo)
-- Campo **Responsável** com lista suspensa carregada diretamente da planilha
-- **Filtros em tempo real**: por nome, status e responsável
-- **Contadores** por status: Desenvolvimento / Produção / Manutenção
-- Link direto para cada painel BI no card
-- **Atualização otimista** — a tela reflete as mudanças imediatamente, sem aguardar a sincronização com o Google Sheets
-- Design dark mode com glassmorphism
-
----
-
-## Tecnologias
-
-| Camada | Tecnologia |
-|--------|-----------|
-| Frontend | HTML + CSS + Vanilla JS (SPA) |
-| Estilo | Tailwind CSS + Lucide Icons (via CDN) |
-| Backend | Google Apps Script |
-| Banco de dados | Google Sheets |
-
-Zero dependências npm. Setup em minutos.
-
----
-
-## Estrutura do Projeto
+## Estrutura
 
 ```
-├── index.html       # Aplicação completa (frontend SPA)
-├── codigo.gs        # Backend (colar no Google Apps Script)
-├── INSTRUCOES.md    # Guia de configuração passo a passo
-└── ARQUITETURA.md   # Documentação técnica detalhada
+Portfolio_Dashboards/
+├── images/          # Logos e imagens estáticas
+│   ├── logo.png
+│   └── logo2.png
+├── index.html       # Estrutura da página
+├── style.css        # Estilos
+└── script.js        # Lógica: busca CSV, renderiza cards e modal
 ```
 
----
+## Fonte de dados
 
-## Configuração Rápida
+Os dados são lidos diretamente de uma planilha Google Sheets publicada na web (sem autenticação). A URL e as colunas esperadas estão configuradas no topo de `script.js`, nas constantes `CONFIG` e `COLUMN_MAP`.
 
-**1. Planilha Google Sheets** — crie duas abas:
+Para trocar a planilha, basta atualizar `SHEETS_CSV_URL` em `script.js` e ajustar `COLUMN_MAP` caso os cabeçalhos sejam diferentes.
 
-- `Dashboards` com colunas: `ID | Nome do BI | Responsável | Status | Descrição | Link`
-- `Usuários` com coluna: `Nome` (um nome por linha a partir da linha 2)
+## Como usar localmente
 
-**2. Google Apps Script** — cole o `codigo.gs`, preencha o `SPREADSHEET_ID` e faça o deploy como Web App (acesso: qualquer pessoa).
-
-**3. index.html** — preencha o bloco `CONFIG`:
-
-```javascript
-const CONFIG = {
-    APPS_SCRIPT_URL: 'https://script.google.com/macros/s/[DEPLOYMENT_ID]/exec',
-    SHEETS_CSV_URL:  'https://docs.google.com/.../pub?output=csv',
-    SHEETS_USUARIOS_CSV_URL: 'https://docs.google.com/.../pub?output=csv&gid=[GID_DA_ABA_USUARIOS]'
-};
-```
-
-**4. Hospedagem** — suba o `index.html` no GitHub Pages ou qualquer servidor estático.
-
-Veja o [guia completo](INSTRUCOES.md) para instruções detalhadas.
-
----
-
-## Limitações
-
-- Sem autenticação — qualquer pessoa com a URL pode visualizar e modificar os dados
-- Adequado para equipes pequenas em ambiente interno
-- Google Sheets não é recomendado para volumes acima de ~10.000 registros
+Abra `index.html` em qualquer servidor HTTP estático (ex.: Live Server no VS Code, `npx serve`, etc.). Não funciona via `file://` por restrições de CORS na busca do CSV.
