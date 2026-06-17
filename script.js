@@ -339,7 +339,7 @@ function criarCard(bi) {
 
   const capaHtml = bi.imagem
     // ? `<img src="${escapeHtml(bi.imagem)}" alt="Capa do painel ${escapeHtml(bi.nome)}" loading="lazy">`
-    ? `<img src="${bi.imagem}" alt="Capa do painel ${escapeHtml(bi.nome)}">`
+    ? `<img src="${bi.imagem}" alt="Capa do painel ${escapeHtml(bi.nome)}" loading="lazy">`
     : `<div class="no-image">📊</div>`;
 
   const checkTitulo = bi.status === 'Produção' ? ' ✅' : '';
