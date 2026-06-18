@@ -403,8 +403,8 @@ function abrirModal(bi) {
   dom.modalDetails.innerHTML = '';
   adicionarDetalhe('PROAD', bi.proad);
   adicionarDetalhe('Versão', bi.versao);
+  adicionarDetalhe('Última Alteração', bi.atualizadoEm);
   adicionarDetalhe('Responsável', bi.responsavel);
-  adicionarDetalhe('Última atualização', bi.atualizadoEm);
   adicionarDetalhe('Aplicativo', bi.aplicativo);
   adicionarDetalhe('Programa de atualização', bi.programaAtualizacao);
   adicionarDetalhe('Descrição da alteração', bi.descricaoAlteracao);
