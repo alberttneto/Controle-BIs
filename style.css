@@ -496,11 +496,11 @@ a {
   aspect-ratio: 16 / 7;
   background: var(--color-primary-light);
   overflow: hidden;
+  border: 5px solid var(--color-primary);
+  border-radius: 13px 13px 0 0px;
 }
 
 .modal-cover img {
-  width: 100%;
-  height: 100%;
   object-fit: cover;
 }
 
@@ -551,6 +551,52 @@ a {
 .modal-details dd {
   font-size: 0.9rem;
   font-weight: 600;
+}
+
+/* Bloco agrupado de atualização (data + responsável + descrição) */
+.detalhe-atualizacao {
+  grid-column: 1 / -1;
+  background: var(--color-bg-soft);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.detalhe-atualizacao__topo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.detalhe-atualizacao__campo {
+  padding: var(--space-sm) var(--space-md);
+}
+
+.detalhe-atualizacao__campo + .detalhe-atualizacao__campo {
+  border-left: 1px solid var(--color-border);
+}
+
+.detalhe-atualizacao__descricao {
+  border-top: 1px solid var(--color-border);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.detalhe-atualizacao dt {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  margin-bottom: 2px;
+}
+
+.detalhe-atualizacao dd {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.detalhe-atualizacao__descricao dd {
+  font-weight: 400;
+  color: var(--color-text-muted);
 }
 
 /* Contêiner das linhas de ação do modal */

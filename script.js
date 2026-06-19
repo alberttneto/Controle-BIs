@@ -401,13 +401,11 @@ function abrirModal(bi) {
   dom.modalDescription.textContent = bi.descricao || 'Sem descrição cadastrada.';
 
   dom.modalDetails.innerHTML = '';
-  adicionarDetalhe('PROAD', bi.proad);
+  // adicionarDetalhe('PROAD', bi.proad);
   adicionarDetalhe('Versão', bi.versao);
-  adicionarDetalhe('Última Alteração', bi.atualizadoEm);
-  adicionarDetalhe('Responsável', bi.responsavel);
   adicionarDetalhe('Aplicativo', bi.aplicativo);
   adicionarDetalhe('Programa de atualização', bi.programaAtualizacao);
-  adicionarDetalhe('Descrição da alteração', bi.descricaoAlteracao);
+  adicionarBlocoAtualizacao(bi.atualizadoEm, bi.responsavel, bi.descricaoAlteracao);
 
   // Botões em pilha, cada um com seu próprio ícone de cópia ao lado
   dom.modalActions.innerHTML = '';
@@ -466,6 +464,29 @@ function adicionarDetalhe(rotulo, valor) {
   const wrapper = document.createElement('div');
   wrapper.innerHTML = `<dt>${escapeHtml(rotulo)}</dt><dd>${escapeHtml(valor)}</dd>`;
   dom.modalDetails.appendChild(wrapper);
+}
+
+function adicionarBlocoAtualizacao(data, responsavel, descricao) {
+  if (!data && !responsavel && !descricao) return;
+  const bloco = document.createElement('div');
+  bloco.className = 'detalhe-atualizacao';
+  bloco.innerHTML = `
+    <div class="detalhe-atualizacao__topo">
+      <div class="detalhe-atualizacao__campo">
+        <dt>Última Alteração</dt>
+        <dd>${escapeHtml(data || '—')}</dd>
+      </div>
+      <div class="detalhe-atualizacao__campo">
+        <dt>Responsável</dt>
+        <dd>${escapeHtml(responsavel || '—')}</dd>
+      </div>
+    </div>
+    ${descricao ? `<div class="detalhe-atualizacao__descricao">
+      <dt>Descrição da Alteração</dt>
+      <dd>${escapeHtml(descricao)}</dd>
+    </div>` : ''}
+  `;
+  dom.modalDetails.appendChild(bloco);
 }
 
 function fecharModal() {
