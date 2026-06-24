@@ -258,14 +258,34 @@ function criarBotaoStatus(valor, label) {
 /* ============================================================
    9. RENDERIZAÇÃO DAS SEÇÕES (agrupadas por Categoria) E CARDS
    ============================================================ */
+function parsearData(str) {
+  if (!str) return null;
+  // Aceita dd/mm/yyyy, dd/mm/yyyy hh:mm e variantes com traço ou ponto
+  const limpa = str.trim().replace(/[.\-]/g, '/');
+  const [parte] = limpa.split(' ');
+  const [d, m, a] = parte.split('/');
+  if (!d || !m || !a) return null;
+  const ts = Date.parse(`${a}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`);
+  return isNaN(ts) ? null : ts;
+}
+
 function obterBIsFiltrados() {
   const termo = state.termoBusca.trim().toLowerCase();
 
-  return state.todosOsBIs.filter((bi) => {
-    const passaStatus = state.statusAtivo === 'todos' || bi.status === state.statusAtivo;
-    const passaBusca = !termo || bi.nome.toLowerCase().includes(termo);
-    return passaStatus && passaBusca;
-  });
+  return state.todosOsBIs
+    .filter((bi) => {
+      const passaStatus = state.statusAtivo === 'todos' || bi.status === state.statusAtivo;
+      const passaBusca = !termo || bi.nome.toLowerCase().includes(termo);
+      return passaStatus && passaBusca;
+    })
+    .sort((a, b) => {
+      const da = parsearData(a.atualizadoEm);
+      const db = parsearData(b.atualizadoEm);
+      if (da === null && db === null) return 0;
+      if (da === null) return 1;
+      if (db === null) return -1;
+      return db - da;
+    });
 }
 
 // Ordem canônica das seções de status (seções sem itens são ignoradas)
