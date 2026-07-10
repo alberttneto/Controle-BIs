@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BI's - Tribunal de Justiça do Estado de Goiás</title>
+<style>
+  :root{
+    --bg:#1e1e1e;
+    --fg:#d4d4d4;
+    --muted:#858585;
+    --muted2:#6a6a6a;
+    --accent:#3a3a3a;
+    --card:#252526;
+    --code-bg:#333333;
+    --code-fg:#cccccc;
+    --link:#4ea1f3;
+    --link-bg:#20364a;
+    --border:#3a3a3a;
+    --danger:#e06c6c;
+    --h-fg:#e8e8e8;
+    --p-fg:#9d9d9d;
+    --card-b:#e0e0e0;
+    --foot:#777;
+    --aux-accent:#5a5a5a;
+    --btn-bg:#252526;
+    --btn-border:#3a3a3a;
+  }
+  html[data-theme="light"]{
+    --bg:#ffffff;
+    --fg:#2b2b2b;
+    --muted:#6a6a6a;
+    --muted2:#999999;
+    --accent:#d0d0d0;
+    --card:#f6f6f6;
+    --code-bg:#eaeaea;
+    --code-fg:#333333;
+    --link:#1666c2;
+    --link-bg:#dce9f7;
+    --border:#e0e0e0;
+    --danger:#c0392b;
+    --h-fg:#1a1a1a;
+    --p-fg:#555555;
+    --card-b:#222222;
+    --foot:#999999;
+    --aux-accent:#c0c0c0;
+    --btn-bg:#f6f6f6;
+    --btn-border:#d0d0d0;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:15px;
+    line-height:1.6;
+    margin:0 auto;
+    padding:32px 40px 60px;
+    max-width:1600px;
+    transition:background .2s ease,color .2s ease;
+  }
+  h1{
+    border-bottom:3px solid var(--accent);
+    padding-bottom:12px;
+    padding-top:10px;
+    letter-spacing:-.3px;
+    font-size:30px;
+    font-weight:600;
+    margin:0 0 4px;
+    color:var(--h-fg);
+  }
+  h2{
+    font-size:24px;
+    font-weight:600;
+    color:var(--h-fg);
+    border-bottom:1px solid var(--border);
+    padding-bottom:8px;
+    margin:38px 0 20px;
+  }
+  h2 .sub{color:var(--muted);font-weight:400;font-size:15px;}
+  h3{
+    font-size:19px;
+    font-weight:600;
+    color:var(--h-fg);
+    margin:0 0 10px;
+    letter-spacing:.2px;
+  }
+  p{color:var(--p-fg);margin:10px 0;}
+  p.lead{color:var(--p-fg);font-size:15px;margin-top:-4px;}
+  hr{border:none;border-top:1px solid var(--border);margin:34px 0;}
+  a{color:var(--link);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  code{
+    background:var(--code-bg);
+    color:var(--code-fg);
+    font-family:"SF Mono",Menlo,Consolas,"Courier New",monospace;
+    font-size:12.5px;
+    padding:2px 7px;
+    border-radius:4px;
+    white-space:nowrap;
+  }
+  a code{
+    background:var(--link-bg);
+    color:var(--link);
+  }
+  a:hover code{text-decoration:underline;}
+  .tagline code{margin-right:6px;}
+  .label{
+    color:var(--muted);
+    font-size:11px;
+    letter-spacing:.5px;
+    font-weight:400;
+  }
+  .card{
+    border-left:3px solid var(--accent);
+    background:var(--card);
+    padding:12px 16px;
+    margin:10px 0;
+    border-radius:0 4px 4px 0;
+  }
+  .card.aux{border-left-color:var(--aux-accent);}
+  .card b{color:var(--card-b);font-weight:600;}
+  .card .line{margin:5px 0;line-height:2;}
+  .danger{color:var(--danger);font-weight:600;}
+  .dot{color:var(--muted2);margin:0 4px;}
+  .panels{color:var(--p-fg);}
+  table.data{
+    border-collapse:collapse;
+    width:auto;
+    margin:14px 0;
+    font-size:14px;
+  }
+  table.data th,table.data td{
+    border-bottom:1px solid var(--border);
+    padding:8px 20px 8px 0;
+    text-align:left;
+    color:var(--p-fg);
+  }
+  table.data th{color:var(--card-b);font-weight:600;}
+  .foot{text-align:center;color:var(--foot);font-size:12px;margin-top:40px;}
+  .top-bar{
+    max-width:1600px;
+    margin:0 auto;
+    padding:0 40px;
+    display:flex;
+    justify-content:flex-end;
+  }
+  #theme-toggle{
+    margin-top:20px;
+    background:var(--btn-bg);
+    color:var(--fg);
+    border:1px solid var(--btn-border);
+    border-radius:6px;
+    padding:8px 14px;
+    font-size:13px;
+    font-family:inherit;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    transition:background .2s ease,border-color .2s ease;
+  }
+  #theme-toggle:hover{border-color:var(--link);}
+  div h3{
+    overflow-wrap: break-word;
+  }
+</style>
+</head>
+
+<div class="top-bar">
+  <button id="theme-toggle" type="button" aria-label="Alternar tema">
+      <span id="theme-icon">🌙</span><span id="theme-text">Modo Noturno</span>
+  </button>
+</div>
+<div align="center">
+  <img id="logo-tjgo" src="https://docs.tjgo.jus.br/institucional/departamentos/software/imagens/logoV.svg" alt="Logo Tribunal de Justiça do Estado de Goiás" style="margin: 0 auto; width: 200px;">
+</div>
+
+<h1 style="padding-top: 30px;">BI's - Tribunal de Justiça do Estado de Goiás</h1>
+<p class="lead">Mapeamento de fontes de dados dos painéis de Business Intelligence. As views são clicáveis e levam ao respectivo catálogo, onde constam as tabelas e views auxiliares que as compõem.</p>
+<p class="tagline"><code>PROJUDI</code> <code>PROAD</code> <code>13 Views</code> <code>5 Views Auxiliares</code></p>
+
+<hr>
+
+<h2>PROJUDI <span class="sub">· 11 painéis</span></h2>
+
+<div class="card"><b>Usuários PROJUDI</b><br>
+<span class="label">VIEWS</span> &nbsp; <a href="#view_api_bi_usuario_igovtic"><code>VIEW_API_BI_USUARIO_IGOVTIC</code></a> &nbsp; <a href="#view_api_bi_usuario"><code>VIEW_API_BI_USUARIO</code></a></div>
+
+<div class="card"><b>Guias Judiciais (Financeiro)</b><br>
+<span class="label">VIEWS</span> &nbsp; <a href="#view_api_bi_proc"><code>VIEW_API_BI_PROC</code></a><br>
+<span class="label">TABELAS</span> &nbsp; <code>GUIA_ITEM</code> <code>GUIA_EMIS</code> <code>PROC</code> <code>PROC_PARTE_DEBITO</code> <code>PROC_PARTE</code> <code>GUIA_TIPO</code> <code>GUIA_STATUS</code> <code>SERV</code> <code>COMARCA</code></div>
+
+<div class="card"><b>Mandados</b><br>
+<span class="label">VIEWS</span> &nbsp; <a href="#view_api_bi_mandado"><code>VIEW_API_BI_MANDADO</code></a></div>
+
+<div class="card"><b>Central de Mandados</b><br>
+<span class="label">VIEWS</span> &nbsp; <a href="#view_api_bi_mandados_oficial"><code>VIEW_API_BI_MANDADOS_OFICIAL</code></a></div>
+
+<div class="card"><b>Recursos STF/STJ</b><br>
+<span class="label">VIEWS</span> &nbsp; <a href="#view_api_bi_arc"><code>VIEW_API_BI_ARC</code></a></div>
+
+<div class="card"><b>Distribuição de Processos</b><br>
+<span class="label">VIEWS</span> &nbsp; <a href="#view_api_bi_distribuicao"><code>VIEW_API_BI_DISTRIBUICAO</code></a></div>
+
+<div class="card"><b>Gratuidade da Justiça</b><br>
+<span class="label">VIEWS</span> &nbsp; <a href="#view_api_bi_guia_gratuidade"><code>VIEW_API_BI_GUIA_GRATUIDADE</code></a></div>
+
+<div class="card"><b>Itens Arrecadação (Financeiro)</b><br>
+<span class="label">VIEWS</span> &nbsp; <a href="#view_api_bi_guia_item"><code>VIEW_API_BI_GUIA_ITEM</code></a> &nbsp; <a href="#view_api_guia"><code>VIEW_API_GUIA</code></a></div>
+
+<div class="card"><b>Taxa Judiciária</b><br>
+<span class="label">VIEWS</span> &nbsp; <a href="#view_api_bi_guia_item"><code>VIEW_API_BI_GUIA_ITEM</code></a> &nbsp; <a href="#view_api_bi_guia"><code>VIEW_API_BI_GUIA</code></a></div>
+
+<div class="card"><b>Advogados Externos</b><br>
+<span class="label">VIEWS</span> &nbsp; <a href="#view_api_bi_oab_maisde5acoes"><code>VIEW_API_BI_OAB_MAISDE5ACOES</code></a></div>
+
+<div class="card"><b>Acessos PROJUDI</b><br>
+<span class="label">VIEWS</span> &nbsp; <a href="#view_api_bi_login"><code>VIEW_API_BI_LOGIN</code></a></div>
+
+<hr>
+
+<h2>PROAD <span class="sub">· 2 painéis</span></h2>
+
+<div class="card"><b>PROAD — Monitoramento Acervo</b><br>
+<span class="label">FONTE</span> &nbsp; <b style="color:var(--muted);">Banco de dados PROAD</b></div>
+
+<div class="card"><b>BI Resposta CNJ</b><br>
+<span class="label">FONTE</span> &nbsp; <b style="color:var(--muted);">Banco de dados PROAD</b></div>
+
+<hr>
+
+<h2>Outras fontes </h2>
+
+<table class="data">
+<tr><th>Painel</th><th>Fonte</th></tr>
+<tr><td>Jira</td><td>API</td></tr>
+<tr><td>BI PAD COGEX</td><td>Google Sheets</td></tr>
+<tr><td>BI Monitoramento de Comitês</td><td>Google Sheets</td></tr>
+<tr><td>BI COGEX PROAD</td><td>Google Sheets</td></tr>
+<tr><td>BI COGEX PROAD TI</td><td>Google Sheets</td></tr>
+<tr><td>BI Gestão de Contratos TIC</td><td>Google Sheets</td></tr>
+<tr><td>BI Regularização</td><td><code>VIEW_REGULARIZACAO_GERAL</code> · <code>VIEW_REGULARIZACAO_BAIRROS</code></td></tr>
+</table>
+
+<hr>
+
+<h2>Catálogo de VIEWS · PROJUDI <span class="sub">· 13 views</span></h2>
+
+<div class="card" id="view_api_bi_arc">
+<h3>VIEW_API_BI_ARC</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>PROC_RESP</code> <code>CNJ_PROC_MOVI</code> <code>PROC</code> <code>MOVI</code> <code>RECURSO</code> <code>USU_SERV</code> <code>PROC_TIPO</code> <code>MOVI_TIPO</code> <code>MOVI_FISICO</code></div>
+<div class="line"><span class="label">VIEWS AUXILIARES</span> &nbsp; <a href="#view_recurso"><code>VIEW_RECURSO</code></a> <a href="#view_usu_serv"><code>VIEW_USU_SERV</code></a> <a href="#view_serv_cargo"><code>VIEW_SERV_CARGO</code></a></div>
+</div>
+
+<div class="card" id="view_api_bi_conclusao">
+<h3>VIEW_API_BI_CONCLUSAO</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>PEND</code> <code>PEND_TIPO</code> <code>PROC</code> <code>PROC_PRIOR</code> <code>SERV</code> <code>COMARCA</code> <code>SERV_SUBTIPO</code></div>
+<div class="line"><span class="label">VIEWS AUXILIARES</span> &nbsp; <a href="#view_pend_resp"><code>VIEW_PEND_RESP</code></a> <a href="#view_serv_cargo"><code>VIEW_SERV_CARGO</code></a></div>
+</div>
+
+<div class="card" id="view_api_bi_distribuicao">
+<h3>VIEW_API_BI_DISTRIBUICAO</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>CNJ_PROC_MOVI</code> <code>PROC_ASSUNTO</code> <code>ASSUNTO</code> <code>PONTEIRO_LOG</code> <code>PONTEIRO_LOG_TIPO</code> <code>PROC</code> <code>PROC_TIPO</code> <code>SERV_AREA_DIST</code> <code>AREA_DIST</code> <code>SERV</code> <code>COMARCA</code> <code>SERV_SUBTIPO</code> <code>SERV_TIPO</code> <code>SERV_CARGO</code> <code>USU_SERV_GRUPO</code> <code>GRUPO</code> <code>USU_SERV</code> <code>USU</code> <code>SERV_RELACIONADA</code></div>
+<div class="line"><span class="label">VIEWS AUXILIARES</span> &nbsp; —</div>
+</div>
+
+<div class="card" id="view_api_bi_guia">
+<h3>VIEW_API_BI_GUIA</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>GUIA_ITEM</code> <code>GUIA_EMIS</code> <code>GUIA_STATUS</code> <code>GUIA_MODELO</code> <code>GUIA_TIPO</code> <code>PROC</code></div>
+<div class="line"><span class="label">VIEWS AUXILIARES</span> &nbsp; —</div>
+</div>
+
+<div class="card" id="view_api_bi_guia_gratuidade">
+<h3>VIEW_API_BI_GUIA_GRATUIDADE</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>GUIA_ITEM</code> <code>GUIA_EMIS</code> <code>PROC</code> <code>GUIA_STATUS</code> <code>GUIA_MODELO</code> <code>GUIA_TIPO</code> <code>SERV</code> <code>COMARCA</code> <code>MOVI</code></div>
+<div class="line"><span class="label">VIEWS AUXILIARES</span> &nbsp; —</div>
+</div>
+
+<div class="card" id="view_api_bi_guia_item">
+<h3>VIEW_API_BI_GUIA_ITEM</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>GUIA_ITEM</code> <code>GUIA_EMIS</code> <code>CUSTA</code> <code>ARRECADACAO_CUSTA</code></div>
+<div class="line"><span class="label">VIEWS AUXILIARES</span> &nbsp; —</div>
+</div>
+
+<div class="card" id="view_api_bi_login">
+<h3>VIEW_API_BI_LOGIN</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>LOG</code> <code>LOG_TIPO</code> <code>USU</code> <code>TIPO</code></div>
+<div class="line"><span class="label">VIEWS AUXILIARES</span> &nbsp; —</div>
+</div>
+
+<div class="card" id="view_api_bi_mandado">
+<h3>VIEW_API_BI_MANDADO</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>MAND_JUD</code> <code>MAND_TIPO</code> <code>AREA</code> <code>ZONA</code> <code>REGIAO</code> <code>BAIRRO</code> <code>MAND_JUD_STATUS</code> <code>PROC_PARTE</code> <code>PROC</code> <code>MAND_JUD_PAGAMENTO_STATUS</code> <code>COMARCA</code> <code>HIST_REDIST_MAND</code> <code>SERV</code> <code>USU</code></div>
+<div class="line"><span class="label">VIEWS AUXILIARES</span> &nbsp; <a href="#view_usu_serv"><code>VIEW_USU_SERV</code></a></div>
+</div>
+
+<div class="card" id="view_api_bi_mandados_oficial">
+<h3>VIEW_API_BI_MANDADOS_OFICIAL</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>ESC</code> <code>SERV_CARGO</code> <code>REGIAO</code> <code>COMARCA</code> <code>USU_SERV_GRUPO</code> <code>USU_SERV</code> <code>USU</code> <code>SERV_CARGO_ESC_STATUS</code> <code>MAND_JUD</code> <code>SERV</code> <code>USU_SERV_AFASTAMENTO</code> <code>AFASTAMENTO</code></div>
+<div class="line"><span class="label">VIEWS AUXILIARES</span> &nbsp; —</div>
+</div>
+
+<div class="card" id="view_api_bi_oab_maisde5acoes">
+<h3>VIEW_API_BI_OAB_MAISDE5ACOES</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>PROC</code> <code>USU_SERV</code> <code>SERV</code> <code>ESTADO</code> <code>PROC_PARTE_ADVOGADO</code> <code>PROC_PARTE</code></div>
+<div class="line"><span class="label">VIEWS AUXILIARES</span> &nbsp; <a href="#view_proc_parte_advogado"><code>VIEW_PROC_PARTE_ADVOGADO</code></a></div>
+</div>
+
+<div class="card" id="view_api_bi_proc">
+<h3>VIEW_API_BI_PROC</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>PROC</code> <code>PROC_TIPO</code> <code>PROC_STATUS</code> <code>PROC_CUSTA_TIPO</code> <code>SERV</code> <code>COMARCA</code></div>
+<div class="line"><span class="label">VIEWS AUXILIARES</span> &nbsp; <a href="#view_api_bi_guia"><code>VIEW_API_BI_GUIA</code></a></div>
+</div>
+
+<div class="card" id="view_api_bi_usuario">
+<h3>VIEW_API_BI_USUARIO</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>USU</code> <code>USU_SERV</code> <code>USU_SERV_GRUPO</code> <code>SERV</code> <code>COMARCA</code> <code>TIPO</code> <code>GRUPO</code></div>
+<div class="line"><span class="label">VIEWS AUXILIARES</span> &nbsp; —</div>
+</div>
+
+<div class="card" id="view_api_bi_usuario_igovtic">
+<h3>VIEW_API_BI_USUARIO_IGOVTIC</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>USU_SERV</code> <code>USU_SERV_GRUPO</code> <code>GRUPO</code> <code>USU</code> <code>TIPO</code></div>
+<div class="line"><span class="label">VIEWS AUXILIARES</span> &nbsp; —</div>
+</div>
+
+<hr>
+
+<h2>VIEWS Auxiliares · PROJUDI <span class="sub">· 5 views de apoio</span></h2>
+<p style="color:var(--muted);font-size:13px;">Views internas que compõem as VIEWS principais do catálogo.</p>
+
+<div class="card aux" id="view_recurso">
+<h3>VIEW_RECURSO</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>RECURSO</code> <code>PROC</code> <code>SERV</code> <code>AREA_DIST</code> <code>PROC_TIPO</code></div>
+<div class="line"><span class="label">USADA POR</span> &nbsp; <a href="#view_api_bi_arc"><code>VIEW_API_BI_ARC</code></a></div>
+</div>
+
+<div class="card aux" id="view_usu_serv">
+<h3>VIEW_USU_SERV</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>USU_SERV</code> <code>SERV</code> <code>USU</code> <code>COMARCA</code> <code>ENDERECO</code> <code>BAIRRO</code> <code>CIDADE</code> <code>ESTADO</code></div>
+<div class="line"><span class="label">USADA POR</span> &nbsp; <a href="#view_api_bi_arc"><code>VIEW_API_BI_ARC</code></a> <a href="#view_api_bi_mandado"><code>VIEW_API_BI_MANDADO</code></a></div>
+</div>
+
+<div class="card aux" id="view_serv_cargo">
+<h3>VIEW_SERV_CARGO</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>SERV_CARGO</code> <code>SERV</code> <code>CARGO_TIPO</code> <code>USU_SERV_GRUPO</code> <code>USU_SERV</code> <code>USU</code> <code>SERV_SUBTIPO</code> <code>GRUPO</code> <code>GRUPO_TIPO</code></div>
+<div class="line"><span class="label">USADA POR</span> &nbsp; <a href="#view_api_bi_arc"><code>VIEW_API_BI_ARC</code></a> <a href="#view_api_bi_conclusao"><code>VIEW_API_BI_CONCLUSAO</code></a></div>
+</div>
+
+<div class="card aux" id="view_pend_resp">
+<h3>VIEW_PEND_RESP</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>PEND_RESP</code> <code>PEND</code> <code>PEND_TIPO</code> <code>SERV</code> <code>SERV_TIPO</code> <code>USU_SERV</code> <code>USU</code> <code>SERV_CARGO</code></div>
+<div class="line"><span class="label">USADA POR</span> &nbsp; <a href="#view_api_bi_conclusao"><code>VIEW_API_BI_CONCLUSAO</code></a></div>
+</div>
+
+<div class="card aux" id="view_proc_parte_advogado">
+<h3>VIEW_PROC_PARTE_ADVOGADO</h3>
+<div class="line"><span class="label">TABELAS</span> &nbsp; <code>PROC_PARTE_ADVOGADO</code> <code>USU_SERV</code> <code>USU_SERV_GRUPO</code> <code>GRUPO</code> <code>SERV</code> <code>USU</code> <code>PROC</code> <code>PROC_PARTE</code> <code>PROC_PARTE_TIPO</code></div>
+<div class="line"><span class="label">USADA POR</span> &nbsp; <a href="#view_api_bi_oab_maisde5acoes"><code>VIEW_API_BI_OAB_MAISDE5ACOES</code></a></div>
+</div>
+
+<hr>
+
+<h2>Tabelas para criação de Triggers <span class="sub">· 12 tabelas</span></h2>
+<p class="lead">Tabelas com volume igual ou superior a 2 milhões de tuplas e múltiplos inserts diários, candidatas à criação de trigger para os campos <code>DATA_CRIACAO</code> e <code>DATA_ALTERACAO</code>. Para cada tabela constam as views e painéis impactados, o volume aferido em 08/07 e as colunas do tipo DATE existentes, permitindo avaliar se a carga incremental pode se apoiar em campo DATE já presente antes da criação da trigger.</p>
+
+<div class="card">
+<h3>PROC</h3>
+<div class="line"><span class="label">VOLUME 08/07</span> &nbsp; <code>10.414.503</code></div>
+<div class="line"><span class="label">COLUNAS DATE</span> &nbsp; <code>DATA_RECEBIMENTO</code> <code>DATA_ARQUIVAMENTO</code> <code>DATA_TRANSITO_JULGADO</code> <code>DATA_DIGITALIZACAO</code> <code>DATA_PRESCRICAO</code></div>
+<div class="line"><span class="label">VIEWS IMPACTADAS</span> &nbsp; <a href="#view_api_bi_arc"><code>VIEW_API_BI_ARC</code></a> <a href="#view_api_bi_conclusao"><code>VIEW_API_BI_CONCLUSAO</code></a> <a href="#view_api_bi_distribuicao"><code>VIEW_API_BI_DISTRIBUICAO</code></a> <a href="#view_api_bi_guia"><code>VIEW_API_BI_GUIA</code></a> <a href="#view_api_bi_guia_gratuidade"><code>VIEW_API_BI_GUIA_GRATUIDADE</code></a> <a href="#view_api_bi_mandado"><code>VIEW_API_BI_MANDADO</code></a> <a href="#view_api_bi_oab_maisde5acoes"><code>VIEW_API_BI_OAB_MAISDE5ACOES</code></a> <a href="#view_api_bi_proc"><code>VIEW_API_BI_PROC</code></a> <a href="#view_recurso"><code>VIEW_RECURSO</code></a> <a href="#view_proc_parte_advogado"><code>VIEW_PROC_PARTE_ADVOGADO</code></a></div>
+<div class="line panels"><span class="label">PAINÉIS</span> &nbsp; Recursos STF/STJ <span class="dot">·</span> Distribuição de Processos <span class="dot">·</span> Guias Judiciais <span class="dot">·</span> Taxa Judiciária <span class="dot">·</span> Gratuidade da Justiça <span class="dot">·</span> Mandados <span class="dot">·</span> Advogados Externos</div>
+</div>
+
+<div class="card">
+<h3>PROC_RESP</h3>
+<div class="line"><span class="label">VOLUME 08/07</span> &nbsp; <code>19.776.130</code></div>
+<div class="line"><span class="label">COLUNAS DATE</span> &nbsp; <span class="danger">Nenhuma</span></div>
+<div class="line"><span class="label">VIEWS IMPACTADAS</span> &nbsp; <a href="#view_api_bi_arc"><code>VIEW_API_BI_ARC</code></a></div>
+<div class="line panels"><span class="label">PAINÉIS</span> &nbsp; Recursos STF/STJ</div>
+</div>
+
+<div class="card">
+<h3>MOVI</h3>
+<div class="line"><span class="label">VOLUME 08/07</span> &nbsp; <code>489.385.860</code></div>
+<div class="line"><span class="label">COLUNAS DATE</span> &nbsp; <code>DATA_REALIZACAO</code></div>
+<div class="line"><span class="label">VIEWS IMPACTADAS</span> &nbsp; <a href="#view_api_bi_arc"><code>VIEW_API_BI_ARC</code></a> <a href="#view_api_bi_guia_gratuidade"><code>VIEW_API_BI_GUIA_GRATUIDADE</code></a></div>
+<div class="line panels"><span class="label">PAINÉIS</span> &nbsp; Recursos STF/STJ <span class="dot">·</span> Gratuidade da Justiça</div>
+</div>
+
+<div class="card">
+<h3>PEND</h3>
+<div class="line"><span class="label">VOLUME 08/07</span> &nbsp; <code>10.681.853</code></div>
+<div class="line"><span class="label">COLUNAS DATE</span> &nbsp; <code>DATA_INICIO</code> <code>DATA_FIM</code> <code>DATA_LIMITE</code> <code>DATA_DIST</code> <code>DATA_VISTO</code> <code>DATA_TEMP</code></div>
+<div class="line"><span class="label">VIEWS IMPACTADAS</span> &nbsp; <a href="#view_api_bi_conclusao"><code>VIEW_API_BI_CONCLUSAO</code></a> <a href="#view_pend_resp"><code>VIEW_PEND_RESP</code></a></div>
+<div class="line panels"><span class="label">PAINÉIS</span> &nbsp; Conclusão</div>
+</div>
+
+<div class="card">
+<h3>PROC_ASSUNTO</h3>
+<div class="line"><span class="label">VOLUME 08/07</span> &nbsp; <code>12.240.417</code></div>
+<div class="line"><span class="label">COLUNAS DATE</span> &nbsp; <span class="danger">Nenhuma</span></div>
+<div class="line"><span class="label">VIEWS IMPACTADAS</span> &nbsp; <a href="#view_api_bi_distribuicao"><code>VIEW_API_BI_DISTRIBUICAO</code></a></div>
+<div class="line panels"><span class="label">PAINÉIS</span> &nbsp; Distribuição de Processos</div>
+</div>
+
+<div class="card">
+<h3>GUIA_ITEM</h3>
+<div class="line"><span class="label">VOLUME 08/07</span> &nbsp; <code>51.299.006</code></div>
+<div class="line"><span class="label">COLUNAS DATE</span> &nbsp; <span class="danger">Nenhuma</span></div>
+<div class="line"><span class="label">VIEWS IMPACTADAS</span> &nbsp; <a href="#view_api_bi_guia"><code>VIEW_API_BI_GUIA</code></a> <a href="#view_api_bi_guia_gratuidade"><code>VIEW_API_BI_GUIA_GRATUIDADE</code></a> <a href="#view_api_bi_guia_item"><code>VIEW_API_BI_GUIA_ITEM</code></a> <a href="#view_api_bi_proc"><code>VIEW_API_BI_PROC</code></a></div>
+<div class="line panels"><span class="label">PAINÉIS</span> &nbsp; Guias Judiciais <span class="dot">·</span> Taxa Judiciária <span class="dot">·</span> Gratuidade da Justiça <span class="dot">·</span> Itens Arrecadação</div>
+</div>
+
+<div class="card">
+<h3>GUIA_EMIS</h3>
+<div class="line"><span class="label">VOLUME 08/07</span> &nbsp; <code>10.530.777</code></div>
+<div class="line"><span class="label">COLUNAS DATE</span> &nbsp; <code>DATA_RECEBIMENTO</code> <code>DATA_VENCIMENTO</code> <code>DATA_EMIS</code> <code>DATA_VENCIMENTO_DUAM</code> <code>DATA_CANCELAMENTO</code> <code>DATA_BASE_ATUALIZACAO</code> <code>DATA_BASE_FINAL_ATUALIAZACAO</code> <code>DATA_MOVIMENTO</code> <code>DATA_REPASSE</code> <code>DATA_EMISSAO_BOLETO</code> <code>DATA_VENCIMENTO_BOLETO</code> <code>DATA_VINCULACAO_GUIA_SALDO</code> <code>DATA_BASE_EMISSAO_JURO_MULTA</code> <code>DATA_VENCIMENTO_ORIGINAL</code></div>
+<div class="line"><span class="label">VIEWS IMPACTADAS</span> &nbsp; <a href="#view_api_bi_guia"><code>VIEW_API_BI_GUIA</code></a> <a href="#view_api_bi_guia_gratuidade"><code>VIEW_API_BI_GUIA_GRATUIDADE</code></a> <a href="#view_api_bi_guia_item"><code>VIEW_API_BI_GUIA_ITEM</code></a> <a href="#view_api_bi_proc"><code>VIEW_API_BI_PROC</code></a></div>
+<div class="line panels"><span class="label">PAINÉIS</span> &nbsp; Guias Judiciais <span class="dot">·</span> Taxa Judiciária <span class="dot">·</span> Gratuidade da Justiça <span class="dot">·</span> Itens Arrecadação</div>
+</div>
+
+<div class="card">
+<h3>PROC_PARTE</h3>
+<div class="line"><span class="label">VOLUME 08/07</span> &nbsp; <code>28.889.836</code></div>
+<div class="line"><span class="label">COLUNAS DATE</span> &nbsp; <code>DATA_BAIXA</code> <code>DATA_CADASTRO</code> <code>DATA_NASCIMENTO</code> <code>RG_DATA_EXPEDICAO</code> <code>DATA_SUSPENSAO</code> <code>DATA_SENTENCA</code> <code>DATA_PRONUNCIA</code> <code>DATA_CONSTITUICAO</code></div>
+<div class="line"><span class="label">VIEWS IMPACTADAS</span> &nbsp; <a href="#view_api_bi_mandado"><code>VIEW_API_BI_MANDADO</code></a> <a href="#view_api_bi_oab_maisde5acoes"><code>VIEW_API_BI_OAB_MAISDE5ACOES</code></a> <a href="#view_proc_parte_advogado"><code>VIEW_PROC_PARTE_ADVOGADO</code></a></div>
+<div class="line panels"><span class="label">PAINÉIS</span> &nbsp; Mandados <span class="dot">·</span> Advogados Externos</div>
+</div>
+
+<div class="card">
+<h3>MAND_JUD</h3>
+<div class="line"><span class="label">VOLUME 08/07</span> &nbsp; <code>3.618.724</code></div>
+<div class="line"><span class="label">COLUNAS DATE</span> &nbsp; <code>DATA_DIST</code> <code>DATA_RETORNO</code> <code>DATA_LIMITE</code> <code>DATA_PAGAMENTO_STATUS</code> <code>DATA_PAGAMENTO_ENVIO</code> <code>DATA_FINALIZACAO</code> <code>DATA_EXPEDICAO_SISTEMA_EXTERNO</code></div>
+<div class="line"><span class="label">VIEWS IMPACTADAS</span> &nbsp; <a href="#view_api_bi_mandado"><code>VIEW_API_BI_MANDADO</code></a> <a href="#view_api_bi_mandados_oficial"><code>VIEW_API_BI_MANDADOS_OFICIAL</code></a></div>
+<div class="line panels"><span class="label">PAINÉIS</span> &nbsp; Mandados <span class="dot">·</span> Central de Mandados (Oficial)</div>
+</div>
+
+<div class="card">
+<h3>HIST_REDIST_MAND</h3>
+<div class="line"><span class="label">VOLUME 08/07</span> &nbsp; <code>3.685.950</code></div>
+<div class="line"><span class="label">COLUNAS DATE</span> &nbsp; <code>DATA_REDIST</code></div>
+<div class="line"><span class="label">VIEWS IMPACTADAS</span> &nbsp; <a href="#view_api_bi_mandado"><code>VIEW_API_BI_MANDADO</code></a></div>
+<div class="line panels"><span class="label">PAINÉIS</span> &nbsp; Mandados</div>
+</div>
+
+<div class="card">
+<h3>PROC_PARTE_ADVOGADO</h3>
+<div class="line"><span class="label">VOLUME 08/07</span> &nbsp; <code>22.744.135</code></div>
+<div class="line"><span class="label">COLUNAS DATE</span> &nbsp; <code>DATA_ENTRADA</code> <code>DATA_SAIDA</code></div>
+<div class="line"><span class="label">VIEWS IMPACTADAS</span> &nbsp; <a href="#view_api_bi_oab_maisde5acoes"><code>VIEW_API_BI_OAB_MAISDE5ACOES</code></a> <a href="#view_proc_parte_advogado"><code>VIEW_PROC_PARTE_ADVOGADO</code></a></div>
+<div class="line panels"><span class="label">PAINÉIS</span> &nbsp; Advogados Externos</div>
+</div>
+
+<div class="card">
+<h3>PEND_RESP</h3>
+<div class="line"><span class="label">VOLUME 08/07</span> &nbsp; <code>17.550.416</code></div>
+<div class="line"><span class="label">COLUNAS DATE</span> &nbsp; <span class="danger">Nenhuma</span></div>
+<div class="line"><span class="label">VIEWS IMPACTADAS</span> &nbsp; <a href="#view_pend_resp"><code>VIEW_PEND_RESP</code></a></div>
+<div class="line panels"><span class="label">PAINÉIS</span> &nbsp; Conclusão</div>
+</div>
+
+<hr>
+<p class="foot">· Mapeamento de BI's ·</p>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  var btn=document.getElementById('theme-toggle');
+  var icon=document.getElementById('theme-icon');
+  var text=document.getElementById('theme-text');
+  var logo=document.getElementById('logo-tjgo');
+  function apply(theme){
+    if(theme==='light'){
+      logo.src = "https://www.pucgoias.edu.br/jornada/wp-content/uploads/sites/19/2021/10/Tribunal-de-Justica-do-Estado-de-Goias.png"
+      logo.style = 'width: 200px; height: 150px'
+      root.setAttribute('data-theme','light');
+      icon.textContent='🌙';
+      text.textContent='Modo noturno';
+    }else{
+      logo.src = "https://docs.tjgo.jus.br/institucional/departamentos/software/imagens/logoV.svg"
+      root.removeAttribute('data-theme');
+      icon.textContent='☀️';
+      text.textContent='Modo claro';
+
+    }
+  }
+  var current='light';
+  apply(current);
+  btn.addEventListener('click',function(){
+    current=(current==='dark')?'light':'dark';
+    apply(current);
+  });
+})();
+</script>
+</body>
+</html>
